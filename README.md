@@ -1,3 +1,5 @@
+<!-- Creator: nvbien2000@gmail.com -->
+
 # recursive_tree_flutter
 
 Thư viện `recursive_tree_flutter` giúp xây dựng một cấu trúc dữ liệu kiểu cây và trực quan hoá chúng dưới dạng cây kế thừa (stack view hoặc expandable tree view). Đa số các thư viện tree-view tập trung vào giao diện, nhưng `recursive_tree_flutter` sẽ tập trung vào cấu trúc dữ liệu cây nên sẽ có thể đáp ứng được nhiều kiểu UI đặc biệt hơn - đó chính là điểm mạnh của thư viện này. Chẳng hạn như khả năng update cây khi một node được chọn.
@@ -11,7 +13,7 @@ Thư viện `recursive_tree_flutter` giúp xây dựng một cấu trúc dữ li
     - [Cấu trúc dữ liệu cây (Dart code)](#cấu-trúc-dữ-liệu-cây-dart-code)
     - [Hàm phụ trợ (Dart code)](#hàm-phụ-trợ-dart-code)
     - [Cây giao diện Flutter](#cây-giao-diện-flutter)
-  - [BSD 3-Clause License](#bsd-3-clause-license)
+  - [BSD-3-Clause License](#bsd-3-clause-license)
 
 ## Tính năng
 
@@ -96,9 +98,9 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
 ![Demo 4](readme_files/vts_department_tree_widget.gif)
 
 
-## BSD 3-Clause License
+## BSD-3-Clause License
 ```
-Copyright (c) 2023, Nguyễn Văn Biên
+Copyright (c) 2023, Viettel Solutions
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
