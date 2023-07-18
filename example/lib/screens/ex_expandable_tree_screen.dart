@@ -13,6 +13,7 @@ class ExExpandableTreeScreen extends StatefulWidget {
 
 class _ExExpandableTreeScreenState extends State<ExExpandableTreeScreen> {
   late TreeType<CustomNodeType> _tree;
+  final TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
@@ -21,10 +22,39 @@ class _ExExpandableTreeScreenState extends State<ExExpandableTreeScreen> {
   }
 
   @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Example Expandable Tree")),
-      body: ExpandableTreeWidget(_tree),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(title: const Text("Example Expandable Tree")),
+        body: Column(
+          children: [
+            Expanded(
+              flex: 4,
+              child: ExpandableTreeWidget(_tree),
+            ),
+            Expanded(
+              flex: 1,
+              child: TextFormField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  hintText: "PRESS ENTER TO UPDATE",
+                ),
+                onFieldSubmitted: (value) {
+                  updateTreeWithSearchingTitle(_tree, value);
+                  setState(() {});
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

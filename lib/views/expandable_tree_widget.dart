@@ -71,6 +71,8 @@ class _VTSNodeWidgetState<T extends AbsNodeType>
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.tree.data.isShowedInSearching) return const SizedBox.shrink();
+
     return Column(
       children: [
         //* Main content of node widget

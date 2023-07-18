@@ -24,8 +24,13 @@ abstract class AbsNodeType {
   /// This property will be useful in an expandable tree view widget.
   bool isExpanded;
 
-  /// Nullable `bool?` - for reducing memory cost
-  bool? isFavorite;
+  bool isFavorite;
+
+  /// If we are searching a text in this tree, every branch from found nodes
+  /// to the root should display [true] - else not show in searching [false].
+  /// 
+  /// We can call this is `isDisplayable`.
+  bool isShowedInSearching;
 
   AbsNodeType({
     required this.id,
@@ -34,6 +39,8 @@ abstract class AbsNodeType {
     this.isUnavailable = false,
     this.isChosen = false,
     this.isExpanded = false,
+    this.isFavorite = false,
+    this.isShowedInSearching = true,
   }) {
     if (!isInner && isChosen == null) {
       throw ArgumentError("Leaf node's `isChosen` cannot contain null value.");

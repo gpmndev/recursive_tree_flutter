@@ -150,3 +150,54 @@ Message: Some logic error happen""");
 //   if (tree.isRoot) return;
 //   updateAncestorsToNull(tree.parent!);
 // }
+
+void updateTreeWithSearchingTitle<T extends AbsNodeType>(
+    TreeType<T> tree, String searchingText) {
+  var root = findRoot(tree);
+
+  // searching text is empty -> mark all nodes displayable
+  if (searchingText.isEmpty) {
+    _updateFullTrueIsShowedInSearching<T>(root);
+    return;
+  }
+
+  //? Step 1: Mark entire tree to non-displayable
+  _updateFullFalseIsShowedInSearching<T>(root);
+
+  //? Step 2: Find all nodes that contains searching text
+  List<TreeType<T>> foundNodes = [];
+  searchAllTreesWithTitleDFS<T>(root, searchingText, foundNodes);
+
+  //? Step 3: Update all branches from founded nodes to root as displayable
+  for (var node in foundNodes) {
+    _updateAncestorsToDisplayable<T>(node);
+  }
+}
+
+/// Update field [isShowedInSearching] of ALL nodes to [true]
+void _updateFullTrueIsShowedInSearching<T extends AbsNodeType>(
+    TreeType<T> tree) {
+  tree.data.isShowedInSearching = true;
+  for (var child in tree.children) {
+    _updateFullTrueIsShowedInSearching(child);
+  }
+}
+
+/// Update field [isShowedInSearching] of ALL nodes to [false]
+void _updateFullFalseIsShowedInSearching<T extends AbsNodeType>(
+    TreeType<T> tree) {
+  tree.data.isShowedInSearching = false;
+  for (var child in tree.children) {
+    _updateFullFalseIsShowedInSearching(child);
+  }
+}
+
+void _updateAncestorsToDisplayable<T extends AbsNodeType>(TreeType<T> tree) {
+  /// `isShowedInSearching` already is true means this branch has been updated
+  /// before (see used in [updateTreeWithSearchingTitle()])
+  if (tree.data.isShowedInSearching) return;
+
+  tree.data.isShowedInSearching = true;
+  if (tree.parent == null) return;
+  _updateAncestorsToDisplayable(tree.parent!);
+}
