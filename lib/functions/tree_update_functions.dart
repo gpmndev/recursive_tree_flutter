@@ -151,6 +151,7 @@ Message: Some logic error happen""");
 //   updateAncestorsToNull(tree.parent!);
 // }
 
+/// Update field `isShowedInSearching` of every node based on searching text.
 void updateTreeWithSearchingTitle<T extends AbsNodeType>(
     TreeType<T> tree, String searchingText) {
   var root = findRoot(tree);

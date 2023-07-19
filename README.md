@@ -41,8 +41,9 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
     - `isUnavailable`:  boolean, mặc định là **false**.
     - `isChosen`: nullable boolean, mặc định là **false**.
     - `isExpanded`: boolean, mặc định là **false**.
-    - `isFavorite`: nullable boolean.
-    + `clone()`: _override_, `T extends AbsNodeType`. Cho phép clone object.
+    - `isFavorite`: boolean, mặc định là **false**.
+    - `isShowedInSearching`: boolean, mặc định là **true**. Còn được gọi là `isDisplayable`, được sử dụng nếu cây giao diện có chức năng search.
+    + `clone()`: abstract method, `T extends AbsNodeType`. Cho phép clone object.
 - [TreeType<T extends AbsNodeType>](lib/models/tree_type.dart): Cấu trúc dữ liệu cây.
 	- `T` là Implement Class của [AbsNodeType](lib/models/abstract_node_type.dart).
     - `data`: _required_, `T`. Dữ liệu (nội dung) trong node gốc của cây hiện tại.
@@ -76,6 +77,7 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
     - [updateTreeMultipleChoice(tree, chosenValue, isUpdatingParentRecursion)](lib/functions/tree_update_functions.dart#L62): Cập nhập cây (multiple choice) khi một node nào đó được tick.
     <!-- - [updateTreeSingleChoice(tree, chosenValue)](lib/functions/tree_update_functions.dart#L105): Cập nhập cây (single choice) khi một lá nào đó được tick. -->
     <!-- - [updateAncestorsToNull(tree)](lib/functions/tree_update_functions.dart#L129): Được sử dụng trong [updateTreeSingleChoice(tree, chosenValue)](lib/functions/tree_update_functions.dart#L105), dùng để update `isChosen` của tổ tiên cây hiện tại về `null`. -->
+    - [updateTreeWithSearchingTitle(tree, searchingText)](lib/functions/tree_update_functions.dart#L115): Update trường `isShowedInSearching` của các node khi áp dụng chức năng search.
 
 ### Cây giao diện Flutter
 
