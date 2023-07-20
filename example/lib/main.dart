@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'screens/ex_expandable_tree_screen.dart';
 import 'screens/ex_lazy_stack_screen.dart';
 import 'screens/ex_stack_screen.dart';
+import 'screens/ex_tree_single_choice.dart';
 import 'screens/vts/ex_vts_department_tree_screen.dart';
 
 void main() {
@@ -41,11 +42,6 @@ class MyApp extends StatelessWidget {
               const ExLazyStackScreen(),
               "Lazy Stack Tree\nmultiple choice - parse data run-time",
             ),
-            // _buildButton(
-            //   context,
-            //   const ExStackTreeScreen(),
-            //   "Stack Tree\nsingle choice - parse data 1 time",
-            // ),
             //_____________________
             const Divider(
               thickness: 2,
@@ -63,11 +59,18 @@ class MyApp extends StatelessWidget {
               const ExVTSDeptTreeScreen(),
               "VTS Department Tree Screen",
             ),
-            // _buildButton(
-            //   context,
-            //   const ExStackTreeScreen(),
-            //   "Expandable Tree\nsingle choice - parse data 1 time",
-            // ),
+            //_____________________
+            const Divider(
+              thickness: 2,
+              height: 50,
+              color: Colors.black,
+            ),
+            //_____________________
+            _buildButton(
+              context,
+              const ExTreeSingleChoice(),
+              "Expandable Tree\nsingle choice - parse data 1 time",
+            ),
           ],
         ),
       ),

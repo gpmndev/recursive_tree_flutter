@@ -76,8 +76,7 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
     - [checkAll(tree)](lib/functions/tree_update_functions.dart#L34): check all.
     - [uncheckALl(tree)](lib/functions/tree_update_functions.dart#L46): uncheck all.
     - [updateTreeMultipleChoice(tree, chosenValue, isUpdatingParentRecursion)](lib/functions/tree_update_functions.dart#L62): Cập nhập cây (multiple choice) khi một node nào đó được tick.
-    <!-- - [updateTreeSingleChoice(tree, chosenValue)](lib/functions/tree_update_functions.dart#L105): Cập nhập cây (single choice) khi một lá nào đó được tick. -->
-    <!-- - [updateAncestorsToNull(tree)](lib/functions/tree_update_functions.dart#L129): Được sử dụng trong [updateTreeSingleChoice(tree, chosenValue)](lib/functions/tree_update_functions.dart#L105), dùng để update `isChosen` của tổ tiên cây hiện tại về `null`. -->
+    - [updateTreeSingleChoice(tree, chosenValue)](lib/functions/tree_update_functions.dart#L105): Cập nhập cây (single choice) khi một lá nào đó được tick.
     - [updateTreeWithSearchingTitle(tree, searchingText)](lib/functions/tree_update_functions.dart#L115): Update trường `isShowedInSearching` của các node khi áp dụng chức năng search.
 
 ### Cây giao diện Flutter
@@ -101,6 +100,10 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
 
 <img src="readme_files/vts_department_tree_widget.gif" alt="Demo 4" width="200"/>
 
+[SingleChoiceTreeWidget](example/lib/screens/ex_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất, single choice:
+
+<img src="readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
+
 ### Giải thích cách hoạt động của expandable tree bất kỳ dựa trên [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart)
 
 Một cây giao diện sẽ có cấu trúc như sau:
@@ -116,14 +119,16 @@ SingleChildScrollView( // tree is scrollable
     ...
 )
 ```
-Ta có thể thấy, `NodeWidget` được xây dựng theo kiểu đệ quy và được bọc ngoài bởi `SingleChildScrollView` cung cấp cho cây khả năng scroll. Việc cập nhập cây (data) sẽ dẫn tới thay đổi trạng thái/UI của `NodeWidget` - có thể sử dụng `setState` hoặc `Provider` để quản lý. `NodeWidget` sẽ kế thừa [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart) (xem ví dụ ở [VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart) dùng `setState`) với một số hàm như:
-  - `initTree()`: Khởi tạo cây (data).
-  - `initRotationController()`: Khởi tạo biến `rotationController` dùng để tạo hiệu ứng khi mở rộng cây UI.
+Ta có thể thấy, `NodeWidget` là `StatefulWidget` được xây dựng theo kiểu đệ quy và được bọc ngoài bởi `SingleChildScrollView` cung cấp cho cây khả năng scroll. Việc cập nhập cây (data) sẽ dẫn tới thay đổi trạng thái/UI của `NodeWidget` - có thể sử dụng `setState` hoặc `Provider` để quản lý. `NodeWidget` sẽ kế thừa [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart) (xem ví dụ ở [VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart) dùng `setState`) với một số hàm như:
+  - `initTree()`: Khởi tạo cây (data) (gọi trong `initState()`).
+  - `initRotationController()`: Khởi tạo biến `rotationController` dùng để tạo hiệu ứng khi mở rộng cây UI (gọi trong `initState()`).
+  - `disposeRotationController()`.
   - `buildView()`: Build giao diện của cây (đã được viết sẵn).
   - `buildNode()`: Build giao diện của một node (phải implement). Hàm này sẽ cho phép developer thoải mái custom giao diện một cách "KHÔNG THỂ TIN NỔI", trải nghiệm "KHÔNG GIỚI HẠN", nói chung là "CHẤT" :))))
   - `buildChildrenNodes()`: Build những node con với hiệu ứng animation mở rộng (đã được viết sẵn).
   - `generateChildrenNodesWidget()`: Trả về `List<NodeWidget>`, phải implement (ví dụ được ghi sẵn ở function doc).
   - `toggleExpansion()`: Xác định việc thu vào/thả ra của những node con.
+  - `updateStateToggleExpansion()`: Update state sau khi thực hiện hành động thu vào/thả ra.
 
 ## BSD-3-Clause License
 ```

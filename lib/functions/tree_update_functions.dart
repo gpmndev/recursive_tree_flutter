@@ -122,34 +122,34 @@ Message: Some logic error happen""");
   }
 }
 
-// /// The tree is single choice, not multiple choice. Only leaf can be chosen.
-// void updateTreeSingleChoice<T extends AbsNodeType>(
-//     TreeType<T> tree, bool chosenValue) {
-//   /// if `chosenValue == true`, all of its ancestors ancestors must have value
-//   /// `isChosen == null` (because we need to customize UI of each inner node if
-//   /// one of its children is chosen), others have value `false`.
-//   ///
-//   /// Otherwise, just update everything - every nodes value to `false`.
+/// The tree is single choice, not multiple choice. Only leaf can be chosen.
+void updateTreeSingleChoice<T extends AbsNodeType>(
+    TreeType<T> tree, bool chosenValue) {
+  /// if `chosenValue == true`, all of its ancestors ancestors must have value
+  /// `isChosen == null` (because we need to customize UI of each inner node if
+  /// one of its children is chosen), others have value `false`.
+  ///
+  /// Otherwise, just update everything - every nodes value to `false`.
 
-//   // uncheck all
-//   var root = findRoot(tree);
-//   uncheckALl(root);
+  // uncheck all
+  var root = findRoot(tree);
+  uncheckALl(root);
 
-//   // if chosen value is true, update all of its ancestors value to null
-//   if (chosenValue) {
-//     updateAncestorsToNull(tree);
-//   } else {}
+  // if chosen value is true, update all of its ancestors value to null
+  if (chosenValue) {
+    _updateAncestorsToNull(tree);
+  } else {}
 
-//   // update current node value
-//   tree.data.isChosen = chosenValue;
-// }
+  // update current node value
+  tree.data.isChosen = chosenValue;
+}
 
-// /// Update `isChosen` of current tree's ancestor to null
-// void updateAncestorsToNull<T extends AbsNodeType>(TreeType<T> tree) {
-//   tree.data.isChosen = null;
-//   if (tree.isRoot) return;
-//   updateAncestorsToNull(tree.parent!);
-// }
+/// Update `isChosen` of current tree's ancestor to null
+void _updateAncestorsToNull<T extends AbsNodeType>(TreeType<T> tree) {
+  tree.data.isChosen = null;
+  if (tree.isRoot) return;
+  _updateAncestorsToNull(tree.parent!);
+}
 
 /// Update field `isShowedInSearching` of every node based on searching text.
 void updateTreeWithSearchingTitle<T extends AbsNodeType>(

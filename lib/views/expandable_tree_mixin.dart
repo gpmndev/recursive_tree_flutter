@@ -5,10 +5,23 @@ mixin ExpandableTreeMixin<T extends AbsNodeType> {
   late AnimationController rotationController;
   late TreeType<T> tree;
 
-  /// Init [tree] at `initState`
+  /// Init [tree] at `initState`, example:
+  /// ```dart
+  /// void initTree() {
+  ///   tree = widget.tree;
+  /// }
+  /// ```
   void initTree();
 
-  /// Init [rotationController] at `initState`
+  /// Init [rotationController] at `initState`, example:
+  /// ```dart
+  /// void initRotationController() {
+  ///   rotationController = AnimationController(
+  ///     duration: const Duration(milliseconds: 300),
+  ///     vsync: this,
+  ///   );
+  /// }
+  /// ```
   void initRotationController();
 
   void disposeRotationController() {
@@ -54,4 +67,6 @@ mixin ExpandableTreeMixin<T extends AbsNodeType> {
         ? rotationController.forward()
         : rotationController.reverse();
   }
+
+  void updateStateToggleExpansion();
 }

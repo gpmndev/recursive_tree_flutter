@@ -63,7 +63,7 @@ class _VTSNodeWidgetState<T extends AbsNodeType>
     super.initState();
     initTree();
     initRotationController();
-    if (widget.tree.data.isExpanded) {
+    if (tree.data.isExpanded) {
       rotationController.forward();
     }
   }
@@ -93,7 +93,7 @@ class _VTSNodeWidgetState<T extends AbsNodeType>
   @override
   Widget buildNode() {
     return InkWell(
-      onTap: widget.tree.data.isUnavailable ? null : setStateToggleExpansion,
+      onTap: widget.tree.data.isUnavailable ? null : updateStateToggleExpansion,
       child: Row(
         children: [
           widget.buildLeadingWidget(widget.tree, () => setState(() {})),
@@ -154,5 +154,6 @@ class _VTSNodeWidgetState<T extends AbsNodeType>
         ),
       );
 
-  void setStateToggleExpansion() => setState(() => toggleExpansion());
+  @override
+  void updateStateToggleExpansion() => setState(() => toggleExpansion());
 }
