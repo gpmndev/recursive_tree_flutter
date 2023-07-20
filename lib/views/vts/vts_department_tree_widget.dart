@@ -130,10 +130,8 @@ class _VTSNodeWidgetState<T extends AbsNodeType>
                 ? null
                 : (value) {
                     widget.tree.data.isChosen = value;
-                    setState(() {
-                      updateTreeMultipleChoice(widget.tree, value);
-                      widget.onNodeDataChanged();
-                    });
+                    updateTreeMultipleChoice(widget.tree, value);
+                    widget.onNodeDataChanged();
                   },
           ),
         ],

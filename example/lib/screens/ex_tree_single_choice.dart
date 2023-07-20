@@ -172,10 +172,8 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
       return Checkbox(
         value: tree.data.isChosen!, // leaves always is true or false
         onChanged: (value) {
-          setState(() {
-            updateTreeSingleChoice(tree, !tree.data.isChosen!);
-            widget.onNodeDataChanged();
-          });
+          updateTreeSingleChoice(tree, !tree.data.isChosen!);
+          widget.onNodeDataChanged();
         },
       );
     }
