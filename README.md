@@ -104,6 +104,10 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
 
 <img src="readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
 
+[LazySingleChoiceTreeWidget](example/lib/screens/ex_lazy_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse run-time, single choice:
+
+<img src="readme_files/ex_lazy_tree_single_choice.gif" alt="Demo 6" width="200"/>
+
 ### Giải thích cách hoạt động của expandable tree bất kỳ dựa trên [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart)
 
 Một cây giao diện sẽ có cấu trúc như sau:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'screens/ex_expandable_tree_screen.dart';
 import 'screens/ex_lazy_stack_screen.dart';
+import 'screens/ex_lazy_tree_single_choice.dart';
 import 'screens/ex_stack_screen.dart';
 import 'screens/ex_tree_single_choice.dart';
 import 'screens/vts/ex_vts_department_tree_screen.dart';
@@ -70,6 +71,11 @@ class MyApp extends StatelessWidget {
               context,
               const ExTreeSingleChoice(),
               "Expandable Tree\nsingle choice - parse data 1 time",
+            ),
+            _buildButton(
+              context,
+              const ExLazyTreeSingleChoice(),
+              "Expandable Tree\nsingle choice - lazy loading",
             ),
           ],
         ),

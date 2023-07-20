@@ -2,29 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
 import '../data/custom_node_type.dart';
-import '../data/example_vts_department_data.dart';
+import '../data/example_lazy_stack_data.dart';
 
-class ExTreeSingleChoice extends StatefulWidget {
-  const ExTreeSingleChoice({super.key});
+class ExLazyTreeSingleChoice extends StatefulWidget {
+  const ExLazyTreeSingleChoice({super.key});
 
   @override
-  State<ExTreeSingleChoice> createState() => _ExTreeSingleChoiceState();
+  State<ExLazyTreeSingleChoice> createState() => _ExLazyTreeSingleChoiceState();
 }
 
-class _ExTreeSingleChoiceState extends State<ExTreeSingleChoice> {
+class _ExLazyTreeSingleChoiceState extends State<ExLazyTreeSingleChoice> {
   late TreeType<CustomNodeType> _tree;
-  final TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
-    _tree = sampleTree();
+    _tree = createRoot();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
   }
 
   @override
@@ -35,31 +28,11 @@ class _ExTreeSingleChoiceState extends State<ExTreeSingleChoice> {
         appBar: AppBar(
           title: const Text("Example Single Choice Expandable Tree"),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              flex: 4,
-              child: SingleChildScrollView(
-                child: _VTSNodeWidget(
-                  _tree,
-                  onNodeDataChanged: () => setState(() {}),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: TextFormField(
-                controller: _textController,
-                decoration: const InputDecoration(
-                  hintText: "PRESS ENTER TO UPDATE",
-                ),
-                onFieldSubmitted: (value) {
-                  updateTreeWithSearchingTitle(_tree, value);
-                  setState(() {});
-                },
-              ),
-            ),
-          ],
+        body: SingleChildScrollView(
+          child: _VTSNodeWidget(
+            _tree,
+            onNodeDataChanged: () => setState(() {}),
+          ),
         ),
       ),
     );
@@ -88,6 +61,7 @@ class _VTSNodeWidget extends StatefulWidget {
 class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
     with SingleTickerProviderStateMixin, ExpandableTreeMixin<CustomNodeType> {
   final Tween<double> _turnsTween = Tween<double>(begin: -0.25, end: 0.0);
+  bool _showLoading = false;
 
   @override
   initState() {
@@ -123,15 +97,14 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
 
   @override
   Widget buildNode() {
-    if (!widget.tree.data.isShowedInSearching) return const SizedBox.shrink();
-
     return InkWell(
-      onTap: updateStateToggleExpansion,
+      onTap: toggleExpansion,
       child: Row(
         children: [
-          buildRotationIcon(),
-          Expanded(child: buildTitle()),
-          buildTrailing(),
+          _buildRotationIcon(),
+          _buildLoadingWidget(),
+          Expanded(child: _buildTitle()),
+          _buildTrailing(),
         ],
       ),
     );
@@ -139,7 +112,7 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
 
   //* __________________________________________________________________________
 
-  Widget buildRotationIcon() {
+  Widget _buildRotationIcon() {
     return RotationTransition(
       turns: _turnsTween.animate(rotationController),
       child: tree.isLeaf
@@ -152,18 +125,30 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
     );
   }
 
-  Widget buildTitle() {
+  Widget _buildLoadingWidget() {
+    if (_showLoading) {
+      return const SizedBox(
+        width: 12.0,
+        height: 12.0,
+        child: CircularProgressIndicator(strokeWidth: 1.0),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget _buildTitle() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 6.0),
       child: Text(
-        tree.data.title + (tree.isLeaf ? "" : " (${tree.children.length})"),
+        (tree.isLeaf ? "+++ " : "- ") + tree.data.title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget buildTrailing() {
+  Widget _buildTrailing() {
     if (tree.data.isUnavailable) {
       return const Icon(Icons.close_rounded, color: Colors.red);
     }
@@ -195,5 +180,72 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
       );
 
   @override
-  void updateStateToggleExpansion() => setState(() => toggleExpansion());
+  void toggleExpansion() async {
+    if (tree.isLeaf) {
+      return;
+    } else {
+      if (!tree.isChildrenLoadedLazily) {
+        setState(() => _showLoading = true);
+        await Future.delayed(const Duration(seconds: 1));
+        tree.isChildrenLoadedLazily = true;
+        var newAddedTreeChildren = getNewAddedTreeChildren(tree);
+
+        /// if inner node has no children, mark it as unavailable & not chosen,
+        /// then update tree and -> `return`
+        if (newAddedTreeChildren.isEmpty) {
+          var snackBar =
+              const SnackBar(content: Text("This one has no children"));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          setState(() {
+            tree.data.isUnavailable = true;
+            tree.data.isChosen = false;
+            _showLoading = false;
+            updateTreeSingleChoice(tree, false);
+          });
+          return;
+        }
+
+        /// else, update new children's `isChosen` properties in case of current
+        /// tree has `isChosen = true`, then continue call stack
+        if (tree.data.isChosen == true) {
+          for (var e in newAddedTreeChildren) {
+            if (!e.data.isUnavailable) e.data.isChosen = true;
+          }
+        }
+        tree.children.addAll(newAddedTreeChildren);
+        setState(() => _showLoading = false);
+      }
+
+      setState(() => super.toggleExpansion());
+    }
+  }
+
+  @override
+  void updateStateToggleExpansion() {}
+}
+
+//! __________________________________________________________________________
+
+List<TreeType<CustomNodeType>> getNewAddedTreeChildren(
+    TreeType<CustomNodeType> parent) {
+  List<TreeType<CustomNodeType>> newChildren;
+  String parentTitle = parent.data.title;
+
+  if (parentTitle.contains("0")) {
+    newChildren = createChildrenOfRoot();
+  } else if (parentTitle.contains("1.1")) {
+    newChildren = createChildrenOfLv1_1();
+  } else if (parentTitle.contains("2.1")) {
+    newChildren = createChildrenOfLv2_1();
+  } else if (parentTitle.contains("2.2")) {
+    newChildren = createChildrenOfLv2_2();
+  } else {
+    newChildren = [];
+  }
+
+  for (var newChild in newChildren) {
+    newChild.parent = parent;
+  }
+
+  return newChildren;
 }

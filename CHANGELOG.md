@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Add example for lazy-loading expandable single choice tree
+
 ## 0.0.3
 
 * Create ExpandableTreeMixin to give developer more powerful to customize tree view UI.
