@@ -13,6 +13,7 @@ Thư viện `recursive_tree_flutter` giúp xây dựng một cấu trúc dữ li
     - [Cấu trúc dữ liệu cây (Dart code)](#cấu-trúc-dữ-liệu-cây-dart-code)
     - [Hàm phụ trợ (Dart code)](#hàm-phụ-trợ-dart-code)
     - [Cây giao diện Flutter](#cây-giao-diện-flutter)
+    - [Giải thích cách hoạt động của expandable tree bất kỳ dựa trên ExpandableTreeMixin](#giải-thích-cách-hoạt-động-của-expandable-tree-bất-kỳ-dựa-trên-expandabletreemixin)
   - [BSD-3-Clause License](#bsd-3-clause-license)
 
 ## Tính năng
@@ -85,20 +86,44 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
 
 [StackWidget](lib/views/stack_widget.dart): Cây giao diện được xây dựng theo kiểu stack. Multiple choice, data được parse 1 lần duy nhất:
 
-![Demo 1](readme_files/stack_widget.gif)
+<img src="readme_files/stack_widget.gif" alt="Demo 1" width="200"/>
+
 
 [StackWidget](lib/views/lazy_stack_widget.dart): Cây giao diện được xây dựng theo kiểu stack lazy-loading. Multiple choice, data được parse run-time:
 
-![Demo 2](readme_files/lazy_stack_widget.gif)
+<img src="readme_files/lazy_stack_widget.gif" alt="Demo 2" width="200"/>
 
 [ExpandableTreeWidget](lib/views/expandable_tree_widget.dart): Cây giao diện được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất:
 
-![Demo 3](readme_files/expandable_tree_widget.gif)
+<img src="readme_files/expandable_tree_widget.gif" alt="Demo 3" width="200"/>
 
 [VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất:
 
-![Demo 4](readme_files/vts_department_tree_widget.gif)
+<img src="readme_files/vts_department_tree_widget.gif" alt="Demo 4" width="200"/>
 
+### Giải thích cách hoạt động của expandable tree bất kỳ dựa trên [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart)
+
+Một cây giao diện sẽ có cấu trúc như sau:
+```dart
+SingleChildScrollView( // tree is scrollable
+  - NodeWidget (root)
+    -- NodeWidget
+      +++ NodeWidget
+      +++ NodeWidget
+      +++ NodeWidget
+    -- NodeWidget
+      +++ NodeWidget
+    ...
+)
+```
+Ta có thể thấy, `NodeWidget` được xây dựng theo kiểu đệ quy và được bọc ngoài bởi `SingleChildScrollView` cung cấp cho cây khả năng scroll. Việc cập nhập cây (data) sẽ dẫn tới thay đổi trạng thái/UI của `NodeWidget` - có thể sử dụng `setState` hoặc `Provider` để quản lý. `NodeWidget` sẽ kế thừa [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart) (xem ví dụ ở [VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart) dùng `setState`) với một số hàm như:
+  - `initTree()`: Khởi tạo cây (data).
+  - `initRotationController()`: Khởi tạo biến `rotationController` dùng để tạo hiệu ứng khi mở rộng cây UI.
+  - `buildView()`: Build giao diện của cây (đã được viết sẵn).
+  - `buildNode()`: Build giao diện của một node (phải implement). Hàm này sẽ cho phép developer thoải mái custom giao diện một cách "KHÔNG THỂ TIN NỔI", trải nghiệm "KHÔNG GIỚI HẠN", nói chung là "CHẤT" :))))
+  - `buildChildrenNodes()`: Build những node con với hiệu ứng animation mở rộng (đã được viết sẵn).
+  - `generateChildrenNodesWidget()`: Trả về `List<NodeWidget>`, phải implement (ví dụ được ghi sẵn ở function doc).
+  - `toggleExpansion()`: Xác định việc thu vào/thả ra của những node con.
 
 ## BSD-3-Clause License
 ```

@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
+
+mixin ExpandableTreeMixin<T extends AbsNodeType> {
+  late AnimationController rotationController;
+  late TreeType<T> tree;
+
+  /// Init [tree] at `initState`
+  void initTree();
+
+  /// Init [rotationController] at `initState`
+  void initRotationController();
+
+  void disposeRotationController() {
+    rotationController.dispose();
+  }
+
+  Widget buildView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildNode(),
+        buildChildrenNodes(),
+      ],
+    );
+  }
+
+  Widget buildNode();
+
+  Widget buildChildrenNodes() {
+    return SizeTransition(
+      sizeFactor: rotationController,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 24),
+        child: Column(children: generateChildrenNodesWidget(tree.children)),
+      ),
+    );
+  }
+
+  /// Return a list of [StatefulWidget] (which represents your tree view).
+  /// Example:
+  ///
+  /// ```dart
+  /// return List.generate(
+  ///   children.length,
+  ///   (int index) => VTSNodeWidget<T>(children[index]),
+  /// );
+  /// ```
+  List<Widget> generateChildrenNodesWidget(List<TreeType<T>> children);
+
+  void toggleExpansion() {
+    tree.data.isExpanded = !tree.data.isExpanded;
+    tree.data.isExpanded
+        ? rotationController.forward()
+        : rotationController.reverse();
+  }
+}

@@ -14,4 +14,5 @@ export 'views/vts/vts_department_tree_widget.dart';
 
 export 'views/expandable_tree_widget.dart';
 export 'views/lazy_stack_widget.dart';
+export 'views/expandable_tree_mixin.dart';
 export 'views/stack_widget.dart';

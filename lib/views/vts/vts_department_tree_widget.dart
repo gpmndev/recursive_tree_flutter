@@ -56,98 +56,95 @@ class _VTSNodeWidget<T extends AbsNodeType> extends StatefulWidget {
 }
 
 class _VTSNodeWidgetState<T extends AbsNodeType>
-    extends State<_VTSNodeWidget<T>> with SingleTickerProviderStateMixin {
-  late AnimationController _rotationController;
-
+    extends State<_VTSNodeWidget<T>>
+    with SingleTickerProviderStateMixin, ExpandableTreeMixin<T> {
   @override
   initState() {
     super.initState();
-
-    _rotationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-
+    initTree();
+    initRotationController();
     if (widget.tree.data.isExpanded) {
-      _rotationController.forward();
+      rotationController.forward();
     }
   }
 
   @override
+  void initTree() {
+    tree = widget.tree;
+  }
+
+  @override
+  void initRotationController() {
+    rotationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+  }
+
+  @override
   void dispose() {
-    _rotationController.dispose();
+    disposeRotationController();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        //* Main content of node widget
-        InkWell(
-          onTap: widget.tree.data.isUnavailable ? null : _toggleExpansion,
-          child: Row(
-            children: [
-              widget.buildLeadingWidget(widget.tree, () => setState(() {})),
-              //? Title
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: Text(
-                    widget.tree.data.title +
-                        (widget.tree.isLeaf
-                            ? ""
-                            : " (${widget.tree.children.length})"),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+  Widget build(BuildContext context) => buildView();
+
+  @override
+  Widget buildNode() {
+    return InkWell(
+      onTap: widget.tree.data.isUnavailable ? null : setStateToggleExpansion,
+      child: Row(
+        children: [
+          widget.buildLeadingWidget(widget.tree, () => setState(() {})),
+          //? Title
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0),
+              child: Text(
+                widget.tree.data.title +
+                    (widget.tree.isLeaf
+                        ? ""
+                        : " (${widget.tree.children.length})"),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              //? Check box
-              Checkbox(
-                tristate: widget.tree.isLeaf ? false : true,
-                side: widget.tree.data.isUnavailable
-                    ? const BorderSide(color: Colors.grey, width: 1.0)
-                    : BorderSide(
-                        color: Theme.of(context).primaryColor, width: 1.0),
-                value: widget.tree.data.isUnavailable
-                    ? false
-                    : widget.tree.data.isChosen,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                ),
-                activeColor: widget.tree.data.isUnavailable
-                    ? Colors.grey
-                    : Theme.of(context).primaryColor,
-                onChanged: widget.tree.data.isUnavailable
-                    ? null
-                    : (value) {
-                        widget.tree.data.isChosen = value;
-                        setState(() {
-                          updateTreeMultipleChoice(widget.tree, value);
-                          widget.onNodeDataChanged();
-                        });
-                      },
-              ),
-            ],
+            ),
           ),
-        ),
-        //* Generate children nodes widget
-        SizeTransition(
-          sizeFactor: _rotationController,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 24),
-            child: Column(
-                children: _generateChildrenNodesWidget(widget.tree.children)),
+          //? Check box
+          Checkbox(
+            tristate: widget.tree.isLeaf ? false : true,
+            side: widget.tree.data.isUnavailable
+                ? const BorderSide(color: Colors.grey, width: 1.0)
+                : BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
+            value: widget.tree.data.isUnavailable
+                ? false
+                : widget.tree.data.isChosen,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+            ),
+            activeColor: widget.tree.data.isUnavailable
+                ? Colors.grey
+                : Theme.of(context).primaryColor,
+            onChanged: widget.tree.data.isUnavailable
+                ? null
+                : (value) {
+                    widget.tree.data.isChosen = value;
+                    setState(() {
+                      updateTreeMultipleChoice(widget.tree, value);
+                      widget.onNodeDataChanged();
+                    });
+                  },
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   //? __________________________________________________________________________
 
-  List<_VTSNodeWidget> _generateChildrenNodesWidget(List<TreeType<T>> list) =>
+  @override
+  List<Widget> generateChildrenNodesWidget(List<TreeType<T>> list) =>
       List.generate(
         list.length,
         (int index) => _VTSNodeWidget<T>(
@@ -157,10 +154,5 @@ class _VTSNodeWidgetState<T extends AbsNodeType>
         ),
       );
 
-  void _toggleExpansion() => setState(() {
-        widget.tree.data.isExpanded = !widget.tree.data.isExpanded;
-        widget.tree.data.isExpanded
-            ? _rotationController.forward()
-            : _rotationController.reverse();
-      });
+  void setStateToggleExpansion() => setState(() => toggleExpansion());
 }

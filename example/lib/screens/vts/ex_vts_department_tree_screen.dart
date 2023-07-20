@@ -203,13 +203,13 @@ class _ExVTSDeptTreeScreenState extends State<ExVTSDeptTreeScreen> {
         //? no display favorite icon if current tree is a inner node
         InkWell(
           onTap: () {
-            tree.data.isFavorite = !tree.data.isFavorite!;
+            tree.data.isFavorite = !tree.data.isFavorite;
             setStateCallback();
           },
           child: SizedBox(
             width: 25,
             height: 25,
-            child: tree.data.isFavorite!
+            child: tree.data.isFavorite
                 ? SvgPicture.asset("assets/img/ic_filled_heart.svg")
                 : SvgPicture.asset("assets/img/ic_heart.svg"),
           ),
