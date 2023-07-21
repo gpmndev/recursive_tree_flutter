@@ -1,3 +1,7 @@
+## 0.0.4+1
+
+* Reduce GIF's size.
+
 ## 0.0.4
 
 * Add example for lazy-loading expandable single choice tree
