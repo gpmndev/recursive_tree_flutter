@@ -3,115 +3,124 @@
 
 # recursive_tree_flutter
 
-Thư viện `recursive_tree_flutter` giúp xây dựng một cấu trúc dữ liệu kiểu cây và trực quan hoá chúng dưới dạng cây kế thừa (stack view hoặc expandable tree view). Đa số các thư viện tree-view tập trung vào giao diện, nhưng `recursive_tree_flutter` sẽ tập trung vào cấu trúc dữ liệu cây nên sẽ có thể đáp ứng được nhiều kiểu UI đặc biệt hơn - đó chính là điểm mạnh của thư viện này. Chẳng hạn như khả năng update cây khi một node được chọn.
+<div align="center">
+
+**Languages:**
+
+[![English](https://img.shields.io/badge/Language-English-blueviolet?style=for-the-badge)](README.md)
+[![Vietnamese](https://img.shields.io/badge/Language-Vietnamese-blueviolet?style=for-the-badge)](README-vi.md)
+  
+</div>
+
+The `recursive_tree_flutter` library helps build a tree data structure and visualizes it as an inheritance tree (stack view or expandable tree view). While most tree-view libraries focus on the interface, `recursive_tree_flutter` prioritizes the tree data structure, allowing it to support various special UI styles - that's the strength of this library. For example, it can update the tree when a node is selected.
 
 ## Mục lục
 
 - [recursive\_tree\_flutter](#recursive_tree_flutter)
   - [Mục lục](#mục-lục)
-  - [Tính năng](#tính-năng)
-  - [Nội dung](#nội-dung)
-    - [Cấu trúc dữ liệu cây (Dart code)](#cấu-trúc-dữ-liệu-cây-dart-code)
-    - [Hàm phụ trợ (Dart code)](#hàm-phụ-trợ-dart-code)
-    - [Cây giao diện Flutter](#cây-giao-diện-flutter)
-    - [Giải thích cách hoạt động của expandable tree bất kỳ dựa trên ExpandableTreeMixin](#giải-thích-cách-hoạt-động-của-expandable-tree-bất-kỳ-dựa-trên-expandabletreemixin)
+  - [Features](#features)
+  - [Contents](#contents)
+    - [Tree Data Structure (Dart code)](#tree-data-structure-dart-code)
+    - [Helper Functions (Dart code)](#helper-functions-dart-code)
+    - [Flutter UI Tree](#flutter-ui-tree)
+    - [Explaining the working of the Expandable Tree based on ExpandableTreeMixin](#explaining-the-working-of-the-expandable-tree-based-on-expandabletreemixin)
   - [BSD-3-Clause License](#bsd-3-clause-license)
 
-## Tính năng
+## Features
 
-Một số tính năng mà thư viện này cung cấp:
+Some features provided by this library include:
 
-- Tạo một cấu trúc dữ liệu kiểu cây (Dart code).
-- Nhiều function thao tác trên cây, ví dụ như find node, search with text, update cây multiple choice...
-- Cho phép mở rộng cây trong run-time (lazy-loading).
-- Có thể sử dụng riêng cấu trúc dữ liệu cây tách biệt hoàn toàn với Flutter UI.
-- Trực quan hoá cấu trúc cây bằng Flutter.
-- Cho phép tuỳ chỉnh giao diện Flutter để phù hợp với nhu cầu sử dụng.
+- Building a tree data structure (Dart code).
+- Various functions for tree operations, such as finding nodes, searching with text, updating multiple choice/single choice trees, etc.
+- Allows lazy-loading to expand the tree at runtime.
+- The tree data structure can be used independently from the Flutter UI.
+- Visualizes the tree structure using Flutter.
+- Allows customization of the Flutter UI to suit specific requirements.
 
-## Nội dung
+## Contents
 
-### Cấu trúc dữ liệu cây (Dart code)
+### Tree Data Structure (Dart code)
 
-Được lấy ý tưởng từ cấu trúc của một cây thư mục trong máy tính, ta sẽ có 2 loại: thư mục và tệp. Một thư mục có thể chứa nhiều tệp và thư mục khác, và tệp là cấp độ bé nhất không thể chứa thêm gì nữa.
+Inspired by the structure of a directory tree on a computer, there are two types of nodes: directories and files. A directory can contain multiple files and other directories, and a file is the smallest level that cannot contain anything else.
 
-Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutter` sẽ xây dựng một cấu trúc dữ liệu cây bao gồm inner node và leaf node.
+Similarly to the directory tree structure on a computer, `recursive_tree_flutter` will build a tree data structure that includes inner nodes and leaf nodes.
 
-- [AbsNodeType](lib/models/abstract_node_type.dart): Class trừu tượng cho kiểu dữ liệu của một node. Một node có thể là inner node và leaf node. Class này có các thuộc tính sau:
+- [AbsNodeType](lib/models/abstract_node_type.dart): An abstract class representing the data type of a node. A node can be either an inner node or a leaf node. This class has the following properties:
 	- `id`: _required_, dynamic.
     - `title`: _required_, String.
-    - `isInner`:  boolean, mặc định là **true**.
-    - `isUnavailable`:  boolean, mặc định là **false**.
-    - `isChosen`: nullable boolean, mặc định là **false**.
-    - `isExpanded`: boolean, mặc định là **false**.
-    - `isFavorite`: boolean, mặc định là **false**.
-    - `isShowedInSearching`: boolean, mặc định là **true**. Còn được gọi là `isDisplayable`, được sử dụng nếu cây giao diện có chức năng search.
-    + `clone()`: abstract method, `T extends AbsNodeType`. Cho phép clone object.
-- [TreeType<T extends AbsNodeType>](lib/models/tree_type.dart): Cấu trúc dữ liệu cây.
-	- `T` là Implement Class của [AbsNodeType](lib/models/abstract_node_type.dart).
-    - `data`: _required_, `T`. Dữ liệu (nội dung) trong node gốc của cây hiện tại.
-    - `children`: _required_, `List<TreeType<T>>`. Danh sách những cây con.
-    - `parent`: _required_, `TreeType<T>?`. Cha của cây hiện tại. Nếu `parent == null`, tức là ta đang ở root của toàn bộ cây.
-    - `isChildrenLoadedLazily`: boolean, mặc định là **false**. Chỉ được sử dụng nếu cây hiện tại là lazy-loading, cho biết liệu children đã được load lần nào hay chưa.
-    - `isLeaf`: Cây hiện tại đang ở node lá?
-    - `isRoot`: Cây hiện tại đang ở node root?
-    - `clone(tree, parent)`: static method. Cho phép clone một cây.
+    - `isInner`:  boolean, default is **true**.
+    - `isUnavailable`:  boolean, default is **false**.
+    - `isChosen`: nullable boolean, default is **false**.
+    - `isExpanded`: boolean, default is **false**.
+    - `isFavorite`: boolean, default is **false**.
+    - `isShowedInSearching`: boolean, default is **true**. Also known as `isDisplayable`, được sử dụng used when the UI tree has a search function.
+    + `clone()`: abstract method, `T extends AbsNodeType`. Allows cloning the object.
+- [TreeType<T extends AbsNodeType>](lib/models/tree_type.dart): The tree data structure.
+	- `T` is the Implement Class of [AbsNodeType](lib/models/abstract_node_type.dart).
+    - `data`: _required_, `T`.
+    - `children`: _required_, `List<TreeType<T>>`.
+    - `parent`: _required_, `TreeType<T>?`. If `parent == null`, it means we are at the root of the entire tree.
+    - `isChildrenLoadedLazily`: boolean, default is **false**. Only used if the current tree is lazy-loading, indicating whether the children have been loaded before or not.
+    - `isLeaf`: Is current tree at a leaf node?
+    - `isRoot`:  Is current tree at the root node?
+    - `clone(tree, parent)`: static method. Allows cloning a tree.
 
-### Hàm phụ trợ (Dart code)
+### Helper Functions (Dart code)
 
-- [tree_traversal_functions.dart](lib/functions/tree_traversal_functions.dart): Chứa các hàm liên quan đến duyệt cây:
+- [tree_traversal_functions.dart](lib/functions/tree_traversal_functions.dart): Contains functions related to tree traversal:
 
-    - [EChosenAllValues](lib/functions/tree_traversal_functions.dart#L4): Là kiểu `enum`, phục vụ cho các thao tác chọn/huỷ chọn trên cây, bao gồm 4 giá trị: `chosenAll`, `unchosenAll`, `chosenSome` & `notChosenable`.
-    - [isChosenAll(tree)](lib/functions/tree_traversal_functions.dart#L10): Kiểm tra xem liệu các con của cây hiện tại có chọn hết, hoặc là không chọn cái nào cả, hoặc là chỉ một số được chọn, hoặc là không khả dụng.
-    - [findRoot(tree)](lib/functions/tree_traversal_functions.dart#L88): Tìm gốc.
-    - [findTreeWithId(tree, id)](lib/functions/tree_traversal_functions.dart#L93): Tìm cây với id dược cho.
-    - [searchAllTreesWithTitleDFS(tree, text, result)](lib/functions/tree_traversal_functions.dart#L108): Tìm tất cả các cây nếu title data của root chứa searching text, dùng thuật toán DFS. Kết quả trả về được lưu trong biến `result`.
-    - [searchLeavesWithTitleDFS(tree, text, result)](lib/functions/tree_traversal_functions.dart#L120): Tìm tất cả các lá nếu title data của lá chứa searching text, dùng thuật toán DFS. Kết quả trả về được lưu trong biến `result`.
-    - [returnChosenLeaves(tree, result)](lib/functions/tree_traversal_functions.dart#L134): Tìm tất cả các lá được chọn. Kết quả trả về được lưu trong biến `result`.
-    - [returnChosenNodes(tree, result)](lib/functions/tree_traversal_functions.dart#L148): Tìm tất cả các node được chọn. Kết quả trả về được lưu trong biến `result`.
-    - [returnFavoriteNodes(tree, result)](lib/functions/tree_traversal_functions.dart#L159): Tìm tất cả các node được đưa vào danh sách yêu thích. Kết quả trả về được lưu trong biến `result`.
-    - [findRightmostOfABranch(tree)](lib/functions/tree_traversal_functions.dart#L176): Tìm node **rightmost** của nhánh cây hiện tại (cây có level hiện tại trừ 1). Hàm này được sử dụng trong VTS Department Tree, dùng để xác định xem node nào nằm ở dưới cùng trong nhánh, thì leading widget của nó sẽ hơi khác biết.
+    - [EChosenAllValues](lib/functions/tree_traversal_functions.dart#L9): An `enum` type for choosing/deselecting nodes in the tree, including 4 values: `chosenAll`, `unchosenAll`, `chosenSome` & `notChosenable`.
+    - [isChosenAll(tree)](lib/functions/tree_traversal_functions.dart#L15): Checks if all the children of the current tree are chosen, unchosen, partially chosen, or not selectable.
+    - [findRoot(tree)](lib/functions/tree_traversal_functions.dart#L93).
+    - [findTreeWithId(tree, id)](lib/functions/tree_traversal_functions.dart#L98).
+    - [searchAllTreesWithTitleDFS(tree, text, result)](lib/functions/tree_traversal_functions.dart#L113): Tìm tất cả các cây nếu title data của root chứa searching text, dùng thuật toán DFS. Kết quả trả về được lưu trong biến `result`.
+    - [searchLeavesWithTitleDFS(tree, text, result)](lib/functions/tree_traversal_functions.dart#L125): Searches for all trees whose root title data contains the searching text using the DFS algorithm. The results are stored in the `result` variable.
+    - [returnChosenLeaves(tree, result)](lib/functions/tree_traversal_functions.dart#L139): Searches for all leaves whose title data contains the searching text using the DFS algorithm. The results are stored in the `result` variable.
+    - [returnChosenNodes(tree, result)](lib/functions/tree_traversal_functions.dart#L153): Returns all chosen leaves. The results are stored in the `result` variable.
+    - [returnFavoriteNodes(tree, result)](lib/functions/tree_traversal_functions.dart#L164): Returns all nodes that have been added to the favorite list. The results are stored in the `result` variable.
+    - [findRightmostOfABranch(tree)](lib/functions/tree_traversal_functions.dart#L181): (***Not important***) Finds the *rightmost* node of the current tree branch (a tree with a current level minus 1). This function is used in the VTS Department Tree to determine which node is at the bottom of the branch, so its leading widget will be slightly different.
+- [tree_update_functions.dart](lib/functions/tree_update_functions.dart): Contains functions related to updating the tree:
 
-- [tree_update_functions.dart](lib/functions/tree_update_functions.dart): Chứa các hàm liên quan đến cập nhập cây:
+    - [updateAllUnavailableNodes(tree)](lib/functions/tree_update_functions.dart#L22): Updates the `isUnavailable` property of all nodes in the current tree. Suppose when parsing data for the first time, some leaves will be unavailable, and we need to update the affected inner nodes. The function returns `true` if the tree is available (chosenable), otherwise `false`.
+    - [checkAll(tree)](lib/functions/tree_update_functions.dart#L39): Check all.
+    - [uncheckALl(tree)](lib/functions/tree_update_functions.dart#L51): Uncheck all.
+    - [updateTreeMultipleChoice(tree, chosenValue, isUpdatingParentRecursion)](lib/functions/tree_update_functions.dart#L68): Updates the multiple choice tree when a node is ticked.
+    - [updateTreeSingleChoice(tree, chosenValue)](lib/functions/tree_update_functions.dart#L131): Updates the single choice tree when a leaf is ticked.
+    - [updateTreeWithSearchingTitle(tree, searchingText)](lib/functions/tree_update_functions.dart#L160): Updates the `isShowedInSearching` field of the nodes when applying the search function.
 
-    - [updateAllUnavailableNodes(tree)](lib/functions/tree_update_functions.dart#L17): Cập nhập các giá trị `isUnavailable` của các node trong cây hiện tại. Giả sử khi ta parse data lần đầu tiên, một số lá sẽ unavailable và ta sẽ cần phải cập nhập luôn các inner node bị ảnh hưởng. Hàm trả về `true` nếu cây khả dụng (choosenable), ngược lại `false`.
-    - [checkAll(tree)](lib/functions/tree_update_functions.dart#L34): check all.
-    - [uncheckALl(tree)](lib/functions/tree_update_functions.dart#L46): uncheck all.
-    - [updateTreeMultipleChoice(tree, chosenValue, isUpdatingParentRecursion)](lib/functions/tree_update_functions.dart#L62): Cập nhập cây (multiple choice) khi một node nào đó được tick.
-    - [updateTreeSingleChoice(tree, chosenValue)](lib/functions/tree_update_functions.dart#L105): Cập nhập cây (single choice) khi một lá nào đó được tick.
-    - [updateTreeWithSearchingTitle(tree, searchingText)](lib/functions/tree_update_functions.dart#L115): Update trường `isShowedInSearching` của các node khi áp dụng chức năng search.
+### Flutter UI Tree
 
-### Cây giao diện Flutter
+<!-- ***[TreeViewProperties](lib/utils/tree_view_properties.dart): Common properties used for various types of Flutter UI trees.*** -->
 
-<!-- ***[TreeViewProperties](lib/utils/tree_view_properties.dart): Các thuộc tính được dùng chung cho các kiểu cây giao diện.*** -->
+[StackWidget](lib/views/stack_widget.dart): The UI tree is built using the stack approach. Multiple choice, data is parsed only once:
 
-[StackWidget](lib/views/stack_widget.dart): Cây giao diện được xây dựng theo kiểu stack. Multiple choice, data được parse 1 lần duy nhất:
-
-<img src="readme_files/stack_widget.gif" alt="Demo 1" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/stack_widget.gif" alt="Demo 1" width="200"/>
 
 
-[StackWidget](lib/views/lazy_stack_widget.dart): Cây giao diện được xây dựng theo kiểu stack lazy-loading. Multiple choice, data được parse run-time:
+[StackWidget](lib/views/lazy_stack_widget.dart): The UI tree is built using the lazy-loading stack approach. Multiple choice, data is parsed at runtime:
 
-<img src="readme_files/lazy_stack_widget.gif" alt="Demo 2" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/lazy_stack_widget.gif" alt="Demo 2" width="200"/>
 
-[ExpandableTreeWidget](lib/views/expandable_tree_widget.dart): Cây giao diện được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất:
+[ExpandableTreeWidget](lib/views/expandable_tree_widget.dart): The UI tree is built using the expandable approach, and data is parsed only once:
 
-<img src="readme_files/expandable_tree_widget.gif" alt="Demo 3" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/expandable_tree_widget.gif" alt="Demo 3" width="200"/>
 
-[VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất:
+[VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart): Another UI tree built using the expandable approach, and data is parsed only once:
 
-<img src="readme_files/vts_department_tree_widget.gif" alt="Demo 4" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/vts_department_tree_widget.gif" alt="Demo 4" width="200"/>
 
-[SingleChoiceTreeWidget](example/lib/screens/ex_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất, single choice:
+[SingleChoiceTreeWidget](example/lib/screens/ex_tree_single_choice.dart): Another UI tree built using the expandable approach, and data is parsed only once, single choice:
 
-<img src="readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
 
-[LazySingleChoiceTreeWidget](example/lib/screens/ex_lazy_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse run-time, single choice:
+[LazySingleChoiceTreeWidget](example/lib/screens/ex_lazy_tree_single_choice.dart): Another UI tree built using the expandable approach, data is parsed at runtime, single choice:
 
-<img src="readme_files/ex_lazy_tree_single_choice.gif" alt="Demo 6" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/ex_lazy_tree_single_choice.gif" alt="Demo 6" width="200"/>
 
-### Giải thích cách hoạt động của expandable tree bất kỳ dựa trên [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart)
+### Explaining the working of the Expandable Tree based on [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart)
 
-Một cây giao diện sẽ có cấu trúc như sau:
+An expandable UI tree has the following structure:
+
 ```dart
 SingleChildScrollView( // tree is scrollable
   - NodeWidget (root)
@@ -124,16 +133,17 @@ SingleChildScrollView( // tree is scrollable
     ...
 )
 ```
-Ta có thể thấy, `NodeWidget` là `StatefulWidget` được xây dựng theo kiểu đệ quy và được bọc ngoài bởi `SingleChildScrollView` cung cấp cho cây khả năng scroll. Việc cập nhập cây (data) sẽ dẫn tới thay đổi trạng thái/UI của `NodeWidget` - có thể sử dụng `setState` hoặc `Provider` để quản lý. `NodeWidget` sẽ kế thừa [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart) (xem ví dụ ở [VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart) dùng `setState`) với một số hàm như:
-  - `initTree()`: Khởi tạo cây (data) (gọi trong `initState()`).
-  - `initRotationController()`: Khởi tạo biến `rotationController` dùng để tạo hiệu ứng khi mở rộng cây UI (gọi trong `initState()`).
+We can see that `NodeWidget` is a `StatefulWidget` built recursively and wrapped by `SingleChildScrollView` to provide scrolling capability to the tree. Updating the tree (data) will change the state/UI of the `NodeWidget` - this can be done using setState or Provider for management. `NodeWidget` will inherit [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart) (as shown in the example [VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart) using `setState`) with some functions like:
+
+  - `initTree()`: Initializes the tree (data) (called in `initState()`).
+  - `initRotationController()`: Initializes the `rotationController` variable used to create an animation effect when expanding the UI tree (called in `initState()`).
   - `disposeRotationController()`.
-  - `buildView()`: Build giao diện của cây (đã được viết sẵn).
-  - `buildNode()`: Build giao diện của một node (phải implement). Hàm này sẽ cho phép developer thoải mái custom giao diện một cách "KHÔNG THỂ TIN NỔI", trải nghiệm "KHÔNG GIỚI HẠN", nói chung là "CHẤT" :))))
-  - `buildChildrenNodes()`: Build những node con với hiệu ứng animation mở rộng (đã được viết sẵn).
-  - `generateChildrenNodesWidget()`: Trả về `List<NodeWidget>`, phải implement (ví dụ được ghi sẵn ở function doc).
-  - `toggleExpansion()`: Xác định việc thu vào/thả ra của những node con.
-  - `updateStateToggleExpansion()`: Update state sau khi thực hiện hành động thu vào/thả ra.
+  - `buildView()`: Builds the UI of the tree (already written).
+  - `buildNode()`: Builds the UI of a node (must be implemented). This function allows developers to freely customize the UI in unlimited ways.
+  - `buildChildrenNodes()`: Builds the child nodes with animation for expansion (already written).
+  - `generateChildrenNodesWidget()`: Returns `List<NodeWidget>,` must be implemented (an example is provided in the function documentation).
+  - `toggleExpansion()`: Determines whether to collapse/expand the child nodes.
+  - `updateStateToggleExpansion()`: Updates the state after performing the collapse/expand action.
 
 ## BSD-3-Clause License
 ```
@@ -164,5 +174,3 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
-
-> **_NOTE:_**  Hoàng Sa, Trường Sa là của Việt Nam.
