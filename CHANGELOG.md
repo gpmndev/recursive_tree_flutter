@@ -1,3 +1,6 @@
+## 0.0.4+2
+
+* Update README with Vietnamese & English.
 ## 0.0.4+1
 
 * Reduce GIF's size.
