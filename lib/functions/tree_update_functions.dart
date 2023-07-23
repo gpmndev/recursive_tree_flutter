@@ -1,3 +1,8 @@
+/* 
+ * Author: Nguyen Van Bien
+ * Email: nvbien2000@gmail.com
+ */
+
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
 /// **This function is used to update all unavailable nodes of current tree**.

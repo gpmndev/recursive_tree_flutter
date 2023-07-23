@@ -1,3 +1,8 @@
+/* 
+ * Author: Nguyen Van Bien
+ * Email: nvbien2000@gmail.com
+ */
+
 library recursive_tree_flutter;
 
 export 'functions/tree_traversal_functions.dart';

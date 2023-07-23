@@ -1,4 +1,5 @@
-<!-- Creator: nvbien2000@gmail.com -->
+<!-- Author: Nguyen Van Bien -->
+<!-- Email: nvbien2000@gmail.com -->
 
 # recursive_tree_flutter
 

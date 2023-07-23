@@ -1,3 +1,8 @@
+/* 
+ * Author: Nguyen Van Bien
+ * Email: nvbien2000@gmail.com
+ */
+
 /// An abstract class about node data type. There're 2 kinds of node:
 /// inner node (including root) & leaf node.
 abstract class AbsNodeType {
