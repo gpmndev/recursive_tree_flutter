@@ -95,28 +95,28 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
 
 [StackWidget](lib/views/stack_widget.dart): Cây giao diện được xây dựng theo kiểu stack. Multiple choice, data được parse 1 lần duy nhất:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/stack_widget.gif" alt="Demo 1" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/stack_widget.gif" alt="Demo 1" width="200"/>
 
 
 [StackWidget](lib/views/lazy_stack_widget.dart): Cây giao diện được xây dựng theo kiểu stack lazy-loading. Multiple choice, data được parse run-time:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/lazy_stack_widget.gif" alt="Demo 2" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/lazy_stack_widget.gif" alt="Demo 2" width="200"/>
 
 [ExpandableTreeWidget](lib/views/expandable_tree_widget.dart): Cây giao diện được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/expandable_tree_widget.gif" alt="Demo 3" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/expandable_tree_widget.gif" alt="Demo 3" width="200"/>
 
 [VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/vts_department_tree_widget.gif" alt="Demo 4" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/vts_department_tree_widget.gif" alt="Demo 4" width="200"/>
 
 [SingleChoiceTreeWidget](example/lib/screens/ex_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất, single choice:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
 
 [LazySingleChoiceTreeWidget](example/lib/screens/ex_lazy_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse run-time, single choice:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/ex_lazy_tree_single_choice.gif" alt="Demo 6" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/ex_lazy_tree_single_choice.gif" alt="Demo 6" width="200"/>
 
 ### Giải thích cách hoạt động của expandable tree bất kỳ dựa trên [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart)
 

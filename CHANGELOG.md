@@ -1,13 +1,11 @@
-## 0.0.4+2
+## 0.0.5
 
 * Update README with Vietnamese & English.
-## 0.0.4+1
-
-* Reduce GIF's size.
+* Reduce GIF size.
 
 ## 0.0.4
 
-* Add example for lazy-loading expandable single choice tree
+* Add example for lazy-loading expandable single choice tree.
 
 ## 0.0.3
 

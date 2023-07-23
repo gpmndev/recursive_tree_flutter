@@ -94,28 +94,28 @@ Similarly to the directory tree structure on a computer, `recursive_tree_flutter
 
 [StackWidget](lib/views/stack_widget.dart): The UI tree is built using the stack approach. Multiple choice, data is parsed only once:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/stack_widget.gif" alt="Demo 1" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/stack_widget.gif" alt="Demo 1" width="200"/>
 
 
 [StackWidget](lib/views/lazy_stack_widget.dart): The UI tree is built using the lazy-loading stack approach. Multiple choice, data is parsed at runtime:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/lazy_stack_widget.gif" alt="Demo 2" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/lazy_stack_widget.gif" alt="Demo 2" width="200"/>
 
 [ExpandableTreeWidget](lib/views/expandable_tree_widget.dart): The UI tree is built using the expandable approach, and data is parsed only once:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/expandable_tree_widget.gif" alt="Demo 3" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/expandable_tree_widget.gif" alt="Demo 3" width="200"/>
 
 [VTSDepartmentTreeWidget](lib/views/vts/vts_department_tree_widget.dart): Another UI tree built using the expandable approach, and data is parsed only once:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/vts_department_tree_widget.gif" alt="Demo 4" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/vts_department_tree_widget.gif" alt="Demo 4" width="200"/>
 
 [SingleChoiceTreeWidget](example/lib/screens/ex_tree_single_choice.dart): Another UI tree built using the expandable approach, and data is parsed only once, single choice:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
 
 [LazySingleChoiceTreeWidget](example/lib/screens/ex_lazy_tree_single_choice.dart): Another UI tree built using the expandable approach, data is parsed at runtime, single choice:
 
-<img src="https://github.com/gpmndev/recursive_tree_flutter/blob/main/readme_files/ex_lazy_tree_single_choice.gif" alt="Demo 6" width="200"/>
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/ex_lazy_tree_single_choice.gif" alt="Demo 6" width="200"/>
 
 ### Explaining the working of the Expandable Tree based on [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart)
 
