@@ -1,3 +1,6 @@
+## 0.0.5+1
+* Update README with section code example.
+
 ## 0.0.5
 
 * Update README with Vietnamese & English.

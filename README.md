@@ -12,12 +12,13 @@
   
 </div>
 
-The `recursive_tree_flutter` library helps build a tree data structure and visualizes it as an inheritance tree (stack view or expandable tree view). While most tree-view libraries focus on the interface, `recursive_tree_flutter` prioritizes the tree data structure, allowing it to support various special UI styles - that's the strength of this library. For example, it can update the tree when a node is selected.
+The `recursive_tree_flutter` library helps build a tree data structure and visualizes it as an inheritance tree (stack view or expandable tree view). While most tree-view libraries focus on the interface, `recursive_tree_flutter` prioritizes the tree data structure, allowing it to support various special UI styles - that's the strength of this library. For example, it can update the tree when a node is selected, return a list of chosen nodes/leaves, return a list of favorite nodes...
 
-## Mục lục
+## Table of contents
 
 - [recursive\_tree\_flutter](#recursive_tree_flutter)
-  - [Mục lục](#mục-lục)
+  - [Table of contents](#table-of-contents)
+  - [Code example](#code-example)
   - [Features](#features)
   - [Contents](#contents)
     - [Tree Data Structure (Dart code)](#tree-data-structure-dart-code)
@@ -25,6 +26,215 @@ The `recursive_tree_flutter` library helps build a tree data structure and visua
     - [Flutter UI Tree](#flutter-ui-tree)
     - [Explaining the working of the Expandable Tree based on ExpandableTreeMixin](#explaining-the-working-of-the-expandable-tree-based-on-expandabletreemixin)
   - [BSD-3-Clause License](#bsd-3-clause-license)
+
+## Code example
+Reference to [Explaining the working of the Expandable Tree based on ExpandableTreeMixin](#explaining-the-working-of-the-expandable-tree-based-on-expandabletreemixin).
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
+
+import '../data/custom_node_type.dart';
+import '../data/example_vts_department_data.dart';
+
+class ExTreeSingleChoice extends StatefulWidget {
+  const ExTreeSingleChoice({super.key});
+
+  @override
+  State<ExTreeSingleChoice> createState() => _ExTreeSingleChoiceState();
+}
+
+class _ExTreeSingleChoiceState extends State<ExTreeSingleChoice> {
+  late TreeType<CustomNodeType> _tree;
+  final TextEditingController _textController = TextEditingController();
+
+  @override
+  void initState() {
+    _tree = sampleTree();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Example Single Choice Expandable Tree"),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              flex: 4,
+              child: SingleChildScrollView(
+                child: _VTSNodeWidget(
+                  _tree,
+                  onNodeDataChanged: () => setState(() {}),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: TextFormField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  hintText: "PRESS ENTER TO UPDATE",
+                ),
+                onFieldSubmitted: (value) {
+                  updateTreeWithSearchingTitle(_tree, value);
+                  setState(() {});
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//? ____________________________________________________________________________
+
+class _VTSNodeWidget extends StatefulWidget {
+  const _VTSNodeWidget(
+    this.tree, {
+    required this.onNodeDataChanged,
+  });
+
+  final TreeType<CustomNodeType> tree;
+
+  /// IMPORTANT: Because this library **DOESN'T** use any state management
+  /// library, therefore I need to use call back function like this - although
+  /// it is more readable if using `Provider`.
+  final VoidCallback onNodeDataChanged;
+
+  @override
+  State<_VTSNodeWidget> createState() => _VTSNodeWidgetState();
+}
+
+class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
+    with SingleTickerProviderStateMixin, ExpandableTreeMixin<CustomNodeType> {
+  final Tween<double> _turnsTween = Tween<double>(begin: -0.25, end: 0.0);
+
+  @override
+  initState() {
+    super.initState();
+    initTree();
+    initRotationController();
+    if (tree.data.isExpanded) {
+      rotationController.forward();
+    }
+  }
+
+  @override
+  void initTree() {
+    tree = widget.tree;
+  }
+
+  @override
+  void initRotationController() {
+    rotationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    disposeRotationController();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => buildView();
+
+  @override
+  Widget buildNode() {
+    if (!widget.tree.data.isShowedInSearching) return const SizedBox.shrink();
+
+    return InkWell(
+      onTap: updateStateToggleExpansion,
+      child: Row(
+        children: [
+          buildRotationIcon(),
+          Expanded(child: buildTitle()),
+          buildTrailing(),
+        ],
+      ),
+    );
+  }
+
+  //* __________________________________________________________________________
+
+  Widget buildRotationIcon() {
+    return RotationTransition(
+      turns: _turnsTween.animate(rotationController),
+      child: tree.isLeaf
+          ? Container()
+          : IconButton(
+              iconSize: 16,
+              icon: const Icon(Icons.expand_more, size: 16.0),
+              onPressed: updateStateToggleExpansion,
+            ),
+    );
+  }
+
+  Widget buildTitle() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+      child: Text(
+        tree.data.title + (tree.isLeaf ? "" : " (${tree.children.length})"),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  Widget buildTrailing() {
+    if (tree.data.isUnavailable) {
+      return const Icon(Icons.close_rounded, color: Colors.red);
+    }
+
+    if (tree.isLeaf) {
+      return Checkbox(
+        value: tree.data.isChosen!, // leaves always is true or false
+        onChanged: (value) {
+          updateTreeSingleChoice(tree, !tree.data.isChosen!);
+          widget.onNodeDataChanged();
+        },
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  //* __________________________________________________________________________
+
+  @override
+  List<Widget> generateChildrenNodesWidget(
+          List<TreeType<CustomNodeType>> list) =>
+      List.generate(
+        list.length,
+        (int index) => _VTSNodeWidget(
+          list[index],
+          onNodeDataChanged: widget.onNodeDataChanged,
+        ),
+      );
+
+  @override
+  void updateStateToggleExpansion() => setState(() => toggleExpansion());
+}
+```
+
+Result: 
+
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
 
 ## Features
 
