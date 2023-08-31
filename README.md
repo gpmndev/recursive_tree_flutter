@@ -327,6 +327,10 @@ Similarly to the directory tree structure on a computer, `recursive_tree_flutter
 
 <img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/ex_lazy_tree_single_choice.gif" alt="Demo 6" width="200"/>
 
+[ExTreeVNRegions](example/lib/screens/ex_tree_vietnam_regions.dart): Vietnam's regions, tree is customized with different color for each level, data is parsed only once:
+
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/vn_regions_tree.gif" alt="Demo 7" width="200"/>
+
 ### Explaining the working of the Expandable Tree based on [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart)
 
 An expandable UI tree has the following structure:

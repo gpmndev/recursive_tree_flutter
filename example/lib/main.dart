@@ -5,6 +5,7 @@ import 'screens/ex_lazy_stack_screen.dart';
 import 'screens/ex_lazy_tree_single_choice.dart';
 import 'screens/ex_stack_screen.dart';
 import 'screens/ex_tree_single_choice.dart';
+import 'screens/ex_tree_vietnam_regions.dart';
 import 'screens/vts/ex_vts_department_tree_screen.dart';
 
 void main() {
@@ -76,6 +77,17 @@ class MyApp extends StatelessWidget {
               context,
               const ExLazyTreeSingleChoice(),
               "Expandable Tree\nsingle choice - lazy loading",
+            ),
+            //_____________________
+            _buildButton(
+              context,
+              const ExTreeSingleChoice(),
+              "Expandable Tree\nsingle choice - parse data 1 time",
+            ),
+            _buildButton(
+              context,
+              const ExTreeVNRegions(),
+              "Vietnam regions tree",
             ),
           ],
         ),

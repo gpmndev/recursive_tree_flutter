@@ -1,3 +1,7 @@
+## 0.0.5+2
+* Update example with customized tree by level.
+* Update README with above change.
+
 ## 0.0.5+1
 * Update README with section code example.
 
