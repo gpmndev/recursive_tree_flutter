@@ -1,3 +1,6 @@
+## 0.0.5+4
+* Change Dart SDK & remove flutter_lints
+
 ## 0.0.5+3
 * Update example for a tree which is initialized with entire expandable.
 
