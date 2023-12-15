@@ -1,70 +1,72 @@
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
-import '../models/custom_node_type.dart';
+import '../models/dms4_node_type.dart';
 
-TreeType<CustomNodeType> sampleTree<T extends AbsNodeType>() {
-  var root = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleInner("0"),
+/// not like [sampleTree()] in `example_vts_department_data.dart`, this tree
+/// won't have any UNAVAILABLE nodes.
+TreeType<Dms4NodeType> sampleTreeDms4<T extends AbsNodeType>() {
+  var root = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleInner("0"),
     children: [],
     parent: null,
   );
 
 //? ------------------ lv 1
 
-  var lv1_1 = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleInner("1.1"),
+  var lv1_1 = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleInner("1.1"),
     children: [],
     parent: null,
   );
 
-  var lv1_2 = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleInner("1.2"),
+  var lv1_2 = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleInner("1.2"),
     children: [],
     parent: null,
   );
 
 //? ------------------ lv 2
 
-  var lv2_1 = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleInner("2.1"),
+  var lv2_1 = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleInner("2.1"),
     children: [],
     parent: null,
   );
 
-  var lv2_2 = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleInner("2.2"),
+  var lv2_2 = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleInner("2.2"),
     children: [],
     parent: null,
   );
 
-  var lv2_3 = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleInner("2.3"),
+  var lv2_3 = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleInner("2.3"),
     children: [],
     parent: null,
   );
 
 //? ------------------ lv 3
 
-  var lv3_1 = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleLeaf("3.1"),
+  var lv3_1 = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleLeaf("3.1"),
     children: [],
     parent: null,
   );
 
-  var lv3_2 = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleLeaf("3.2"),
+  var lv3_2 = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleLeaf("3.2"),
     children: [],
     parent: null,
   );
 
-  var lv3_3 = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleLeaf("3.3"),
+  var lv3_3 = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleLeaf("3.3"),
     children: [],
     parent: null,
   );
 
-  var lv3_4 = TreeType<CustomNodeType>(
-    data: CustomNodeType.sampleLeaf("3.4"),
+  var lv3_4 = TreeType<Dms4NodeType>(
+    data: Dms4NodeType.sampleLeaf("3.4"),
     children: [],
     parent: null,
   );
@@ -85,8 +87,6 @@ TreeType<CustomNodeType> sampleTree<T extends AbsNodeType>() {
   lv1_1.children.addAll([lv2_1, lv2_2, lv2_3]);
   lv2_1.children.addAll([lv3_1, lv3_2, lv3_3]);
   lv2_2.children.addAll([lv3_4]);
-
-  updateAllUnavailableNodes(root);
 
   return root;
 }

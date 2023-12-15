@@ -3,7 +3,7 @@
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
 import 'vn.dart';
-import 'vn_region_node.dart';
+import '../models/vn_region_node.dart';
 
 const VN_LEVEL = 0;
 const PROVINCE_LEVEL = 1;
@@ -20,7 +20,8 @@ TreeType<VNRegionNode> sampleVNRegionNode<T extends AbsNodeType>() {
   //? -------------------
 
   for (Map<String, dynamic> province in vnJson.values) {
-    var newProvince = TreeType<VNRegionNode>( // <---- province
+    var newProvince = TreeType<VNRegionNode>(
+      // <---- province
       data: VNRegionNode(
         id: province["code"],
         title: province["name"],
@@ -32,8 +33,10 @@ TreeType<VNRegionNode> sampleVNRegionNode<T extends AbsNodeType>() {
 
     root.children.add(newProvince);
 
-    for (Map<String, dynamic> district in (province["quan-huyen"] as Map).values) {
-      var newDistrict = TreeType<VNRegionNode>( // <---- district
+    for (Map<String, dynamic> district
+        in (province["quan-huyen"] as Map).values) {
+      var newDistrict = TreeType<VNRegionNode>(
+        // <---- district
         data: VNRegionNode(
           id: district["code"],
           title: district["name"],
@@ -46,7 +49,8 @@ TreeType<VNRegionNode> sampleVNRegionNode<T extends AbsNodeType>() {
       newProvince.children.add(newDistrict);
 
       for (Map<String, dynamic> ward in (district["xa-phuong"] as Map).values) {
-        var newWard = TreeType<VNRegionNode>( // <---- ward
+        var newWard = TreeType<VNRegionNode>(
+          // <---- ward
           data: VNRegionNode(
             id: ward["code"],
             title: ward["name"],

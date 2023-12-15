@@ -1,6 +1,6 @@
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
-import 'custom_node_type.dart';
+import '../models/custom_node_type.dart';
 
 TreeType<CustomNodeType> createRoot() => TreeType<CustomNodeType>(
       data: CustomNodeType.sampleInner("0"),

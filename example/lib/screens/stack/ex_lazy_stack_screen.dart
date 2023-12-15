@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
-import '../data/custom_node_type.dart';
-import '../data/example_stack_data.dart';
+import '../../models/custom_node_type.dart';
+import '../../data/example_lazy_stack_data.dart';
 
-/// data was parsed 1 time
-class ExStackScreen extends StatefulWidget {
-  const ExStackScreen({super.key});
+/// data was parsed in run-time
+class ExLazyStackScreen extends StatefulWidget {
+  const ExLazyStackScreen({super.key});
 
   @override
-  State<ExStackScreen> createState() => _ExStackScreenState();
+  State<ExLazyStackScreen> createState() => _ExLazyStackScreenState();
 }
 
-class _ExStackScreenState extends State<ExStackScreen> {
+class _ExLazyStackScreenState extends State<ExLazyStackScreen> {
   List<TreeType<CustomNodeType>> listTrees = [];
   final String searchingText = "3";
 
   @override
   void initState() {
-    listTrees = sampleTree();
+    listTrees = [createRoot()];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Stack Tree (multiple choice)")),
+      appBar: AppBar(title: const Text("Lazy Stack Tree (multiple choice)")),
       body: Column(
         children: [
           const SizedBox(height: 30),
@@ -38,11 +38,12 @@ class _ExStackScreenState extends State<ExStackScreen> {
             height: 60,
           ),
           Expanded(
-            child: StackWidget(
+            child: LazyStackWidget(
               properties: TreeViewProperties<CustomNodeType>(
                 title: "THIS IS TITLE",
               ),
               listTrees: listTrees,
+              getNewAddedTreeChildren: getNewAddedTreeChildren,
             ),
           ),
           const Divider(
@@ -53,22 +54,22 @@ class _ExStackScreenState extends State<ExStackScreen> {
             onPressed: () {
               List<TreeType<CustomNodeType>> result = [];
               var root = findRoot(listTrees[0]);
-              returnChosenLeaves(root, result);
+              returnChosenNodes(root, result);
               String resultTxt = "";
               for (var e in result) {
-                resultTxt += "${e.data.title}\n";
+                resultTxt += "\n${e.data.title}";
               }
-              if (resultTxt.isEmpty) resultTxt = "none";
+              if (resultTxt.isEmpty) resultTxt = "\nnone";
 
               var snackBar = SnackBar(content: Text(resultTxt));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             },
-            child: const Text("Which leaves were chosen?"),
+            child: const Text("Which nodes were chosen? (not full data)"),
           ),
           OutlinedButton(
             onPressed: () {
               List<TreeType<CustomNodeType>> result = [];
-              var root = listTrees[0].parent!;
+              var root = findRoot(listTrees[0]);
               searchAllTreesWithTitleDFS(root, searchingText, result);
               String resultTxt = "";
               for (var e in result) {
@@ -79,11 +80,36 @@ class _ExStackScreenState extends State<ExStackScreen> {
               var snackBar = SnackBar(content: Text(resultTxt));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             },
-            child: Text("Which nodes contain text='$searchingText'?"),
+            child: Text(
+                "Which nodes contain text='$searchingText'? (not full data)"),
           ),
           const SizedBox(height: 30),
         ],
       ),
     );
+  }
+
+  List<TreeType<CustomNodeType>> getNewAddedTreeChildren(
+      TreeType<CustomNodeType> parent) {
+    List<TreeType<CustomNodeType>> newChildren;
+    String parentTitle = parent.data.title;
+
+    if (parentTitle.contains("0")) {
+      newChildren = createChildrenOfRoot();
+    } else if (parentTitle.contains("1.1")) {
+      newChildren = createChildrenOfLv1_1();
+    } else if (parentTitle.contains("2.1")) {
+      newChildren = createChildrenOfLv2_1();
+    } else if (parentTitle.contains("2.2")) {
+      newChildren = createChildrenOfLv2_2();
+    } else {
+      newChildren = [];
+    }
+
+    for (var newChild in newChildren) {
+      newChild.parent = parent;
+    }
+
+    return newChildren;
   }
 }
