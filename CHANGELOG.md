@@ -1,3 +1,6 @@
+## 0.0.5+3
+* Update example for a tree which is initialized with entire expandable.
+
 ## 0.0.5+2
 * Update example with customized tree by level.
 * Update README with above change.
