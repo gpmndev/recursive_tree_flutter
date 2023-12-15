@@ -1,6 +1,6 @@
 name: recursive_tree_flutter
 description: A tree-view package which focuses on tree data structure and displays it into UI.
-version: 0.0.5+2
+version: 0.0.5+3
 repository: https://github.com/gpmndev/recursive_tree_flutter
 
 environment:

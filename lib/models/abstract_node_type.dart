@@ -33,7 +33,7 @@ abstract class AbsNodeType {
 
   /// If we are searching a text in this tree, every branch from found nodes
   /// to the root should display [true] - else not show in searching [false].
-  /// 
+  ///
   /// We can call this is `isDisplayable`.
   bool isShowedInSearching;
 
@@ -57,5 +57,4 @@ abstract class AbsNodeType {
   @override
   String toString() =>
       "AbsNodeType{title: $title, isInner: $isInner, isUnavailable: $isUnavailable, isChosen: $isChosen, isExpanded: $isExpanded}";
-
 }
