@@ -1,3 +1,6 @@
+## 0.0.6+1
+* Downgrade SDK again
+
 ## 0.0.6
 * Refactor example.
 * Apply a customized tree/function for Viettel DMS.4: single choice, every node can be chosen.
