@@ -1,6 +1,6 @@
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
-import 'custom_node_type.dart';
+import '../models/custom_node_type.dart';
 
 List<TreeType<CustomNodeType>> sampleTree<T extends AbsNodeType>() {
   var root = TreeType<CustomNodeType>(

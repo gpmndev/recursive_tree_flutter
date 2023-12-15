@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
-import '../data/custom_node_type.dart';
-import '../data/example_lazy_stack_data.dart';
+import '../../models/custom_node_type.dart';
+import '../../data/example_lazy_stack_data.dart';
 
 class ExLazyTreeSingleChoice extends StatefulWidget {
   const ExLazyTreeSingleChoice({super.key});
@@ -88,7 +88,7 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
 
   @override
   void dispose() {
-    disposeRotationController();
+    super.disposeRotationController();
     super.dispose();
   }
 

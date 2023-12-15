@@ -1,3 +1,8 @@
+## 0.0.6
+* Refactor example.
+* Apply a customized tree/function for Viettel DMS.4: single choice, every node can be chosen.
+* Update example for customized tree - Viettel DMS.4
+
 ## 0.0.5+4
 * Change Dart SDK & remove flutter_lints
 

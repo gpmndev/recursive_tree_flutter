@@ -1,33 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
-import '../data/example_vn_regions_data.dart';
-import '../data/vn_region_node.dart';
+import '../../models/custom_node_type.dart';
+import '../../data/example_vts_department_data.dart';
 
-class ExTreeVNRegions extends StatefulWidget {
-  const ExTreeVNRegions({super.key});
+class ExTreeSingleChoice extends StatefulWidget {
+  const ExTreeSingleChoice({super.key});
 
   @override
-  State<ExTreeVNRegions> createState() => _ExTreeVNRegionsState();
+  State<ExTreeSingleChoice> createState() => _ExTreeSingleChoiceState();
 }
 
-class _ExTreeVNRegionsState extends State<ExTreeVNRegions> {
-  late TreeType<VNRegionNode> _tree;
+class _ExTreeSingleChoiceState extends State<ExTreeSingleChoice> {
+  late TreeType<CustomNodeType> _tree;
+  final TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
-    _tree = sampleVNRegionNode();
+    _tree = sampleTree();
     super.initState();
   }
 
   @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Vietnam regions tree")),
-      body: SingleChildScrollView(
-        child: _NodeWidget(
-          _tree,
-          onNodeDataChanged: () => setState(() {}),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Example Single Choice Expandable Tree"),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              flex: 4,
+              child: SingleChildScrollView(
+                child: _VTSNodeWidget(
+                  _tree,
+                  onNodeDataChanged: () => setState(() {}),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: TextFormField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  hintText: "PRESS ENTER TO UPDATE",
+                ),
+                onFieldSubmitted: (value) {
+                  updateTreeWithSearchingTitle(_tree, value);
+                  setState(() {});
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -36,13 +68,13 @@ class _ExTreeVNRegionsState extends State<ExTreeVNRegions> {
 
 //? ____________________________________________________________________________
 
-class _NodeWidget extends StatefulWidget {
-  const _NodeWidget(
+class _VTSNodeWidget extends StatefulWidget {
+  const _VTSNodeWidget(
     this.tree, {
     required this.onNodeDataChanged,
   });
 
-  final TreeType<VNRegionNode> tree;
+  final TreeType<CustomNodeType> tree;
 
   /// IMPORTANT: Because this library **DOESN'T** use any state management
   /// library, therefore I need to use call back function like this - although
@@ -50,11 +82,11 @@ class _NodeWidget extends StatefulWidget {
   final VoidCallback onNodeDataChanged;
 
   @override
-  State<_NodeWidget> createState() => _NodeWidgetState();
+  State<_VTSNodeWidget> createState() => _VTSNodeWidgetState();
 }
 
-class _NodeWidgetState<T extends AbsNodeType> extends State<_NodeWidget>
-    with SingleTickerProviderStateMixin, ExpandableTreeMixin<VNRegionNode> {
+class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
+    with SingleTickerProviderStateMixin, ExpandableTreeMixin<CustomNodeType> {
   final Tween<double> _turnsTween = Tween<double>(begin: -0.25, end: 0.0);
 
   @override
@@ -82,7 +114,7 @@ class _NodeWidgetState<T extends AbsNodeType> extends State<_NodeWidget>
 
   @override
   void dispose() {
-    disposeRotationController();
+    super.disposeRotationController();
     super.dispose();
   }
 
@@ -93,32 +125,14 @@ class _NodeWidgetState<T extends AbsNodeType> extends State<_NodeWidget>
   Widget buildNode() {
     if (!widget.tree.data.isShowedInSearching) return const SizedBox.shrink();
 
-    Color colorByLevel;
-    switch (widget.tree.data.level) {
-      case VN_LEVEL:
-        colorByLevel = Colors.red;
-        break;
-      case PROVINCE_LEVEL:
-        colorByLevel = Colors.blue;
-        break;
-      case DISTRICT_LEVEL:
-        colorByLevel = Colors.green;
-        break;
-      default:
-        colorByLevel = Colors.pink;
-    }
-
     return InkWell(
       onTap: updateStateToggleExpansion,
-      child: Container(
-        color: colorByLevel,
-        child: Row(
-          children: [
-            buildRotationIcon(),
-            Expanded(child: buildTitle()),
-            buildTrailing(),
-          ],
-        ),
+      child: Row(
+        children: [
+          buildRotationIcon(),
+          Expanded(child: buildTitle()),
+          buildTrailing(),
+        ],
       ),
     );
   }
@@ -170,10 +184,11 @@ class _NodeWidgetState<T extends AbsNodeType> extends State<_NodeWidget>
   //* __________________________________________________________________________
 
   @override
-  List<Widget> generateChildrenNodesWidget(List<TreeType<VNRegionNode>> list) =>
+  List<Widget> generateChildrenNodesWidget(
+          List<TreeType<CustomNodeType>> list) =>
       List.generate(
         list.length,
-        (int index) => _NodeWidget(
+        (int index) => _VTSNodeWidget(
           list[index],
           onNodeDataChanged: widget.onNodeDataChanged,
         ),

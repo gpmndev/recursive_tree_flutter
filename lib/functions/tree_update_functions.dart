@@ -207,3 +207,15 @@ void _updateAncestorsToDisplayable<T extends AbsNodeType>(TreeType<T> tree) {
   if (tree.parent == null) return;
   _updateAncestorsToDisplayable(tree.parent!);
 }
+
+/// The tree is single choice, not multiple choice. Viettel DMS.4 customized
+/// version: Every node can be chosen, so [T.isChosen] is never null.
+void updateTreeSingleChoiceDms4<T extends AbsNodeType>(
+    TreeType<T> tree, bool chosenValue) {
+  // uncheck all - every node will have isChosen = false
+  var root = findRoot(tree);
+  uncheckALl(root);
+
+  // update current node value
+  tree.data.isChosen = chosenValue;
+}

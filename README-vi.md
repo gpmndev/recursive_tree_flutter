@@ -320,13 +320,21 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
 
 <img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/vts_department_tree_widget.gif" alt="Demo 4" width="200"/>
 
-[SingleChoiceTreeWidget](example/lib/screens/ex_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất, single choice:
+[SingleChoiceTreeWidget](example/lib/screens/expandable_single_choice/ex_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse 1 lần duy nhất, single choice:
 
 <img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/ex_tree_single_choice.gif" alt="Demo 5" width="200"/>
 
-[LazySingleChoiceTreeWidget](example/lib/screens/ex_lazy_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse run-time, single choice:
+[LazySingleChoiceTreeWidget](example/lib/screens/expandable_single_choice/ex_lazy_tree_single_choice.dart): Một cây giao diện khác được xây dựng theo kiểu expandable, data được parse run-time, single choice:
 
 <img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/ex_lazy_tree_single_choice.gif" alt="Demo 6" width="200"/>
+
+[ExVNRegions](example/lib/screens/expandable_single_choice/ex_vietnam_regions.dart): Cây khu vực Việt Nam (tỉnh, huyện, xã):
+
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/vn_regions_tree.gif" alt="Demo 7" width="200"/>
+
+[ExVTSDms4TreeScreen](example/lib/screens/vts/ex_vts_dms4_tree_screen.dart): Cây đơn vị của Viettel VTS miền Nam DMS.4:
+
+<img src="https://github.com/gpmndev/recursive_tree_flutter/raw/main/readme_files/vts_dm4_tree.gif" alt="Demo 8" width="200"/>
 
 ### Giải thích cách hoạt động của expandable tree bất kỳ dựa trên [ExpandableTreeMixin](lib/views/expandable_tree_mixin.dart)
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
-import '../../data/custom_node_type.dart';
+import '../../models/custom_node_type.dart';
 import '../../data/example_vts_department_data.dart';
 import '../helper/empty_page.dart';
 import '../helper/error_page.dart';

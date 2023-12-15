@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
-import '../data/custom_node_type.dart';
-import '../data/example_vts_department_data_expanded.dart';
+import '../../models/custom_node_type.dart';
+import '../../data/example_vts_department_data.dart';
 
-class ExExpandableTreeExpandedScreen extends StatefulWidget {
-  const ExExpandableTreeExpandedScreen({super.key});
+class ExExpandableTreeScreen extends StatefulWidget {
+  const ExExpandableTreeScreen({super.key});
 
   @override
-  State<ExExpandableTreeExpandedScreen> createState() =>
-      _ExExpandableTreeExpandedScreenState();
+  State<ExExpandableTreeScreen> createState() => _ExExpandableTreeScreenState();
 }
 
-class _ExExpandableTreeExpandedScreenState
-    extends State<ExExpandableTreeExpandedScreen> {
+class _ExExpandableTreeScreenState extends State<ExExpandableTreeScreen> {
   late TreeType<CustomNodeType> _tree;
   final TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
-    _tree = sampleTreeExpanded();
+    _tree = sampleTree();
     super.initState();
   }
 

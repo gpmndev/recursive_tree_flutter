@@ -83,7 +83,7 @@ class _VTSNodeWidgetState<T extends AbsNodeType>
 
   @override
   void dispose() {
-    disposeRotationController();
+    super.disposeRotationController();
     super.dispose();
   }
 
