@@ -37,7 +37,10 @@ class _ExExpandableTreeScreenState extends State<ExExpandableTreeScreen> {
           children: [
             Expanded(
               flex: 4,
-              child: ExpandableTreeWidget(_tree),
+              child: ExpandableTreeWidget(
+                _tree,
+                maxLines: 2,
+              ),
             ),
             Expanded(
               flex: 1,

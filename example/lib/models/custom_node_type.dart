@@ -20,7 +20,8 @@ class CustomNodeType extends AbsNodeType {
 
   CustomNodeType.sampleLeaf(String level) : super(id: -1, title: "") {
     super.id = Random().nextInt(100000);
-    super.title = "(leaf) title of level $level";
+    super.title =
+        "(leaf) title of level $level\nUse [maxLines] if your title is too long";
     subtitle = "subtitle of level = $level";
     super.isInner = false;
     super.isFavorite = false;

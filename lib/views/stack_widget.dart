@@ -19,8 +19,7 @@ class StackWidget<T extends AbsNodeType> extends StatefulWidget {
   State<StackWidget> createState() => _StackWidgetState<T>();
 }
 
-class _StackWidgetState<T extends AbsNodeType>
-    extends State<StackWidget<T>> {
+class _StackWidgetState<T extends AbsNodeType> extends State<StackWidget<T>> {
   List<TreeType<T>> listTrees = [];
 
   @override
