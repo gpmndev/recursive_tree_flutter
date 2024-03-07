@@ -3,9 +3,14 @@ import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
 /// This widget displays the whole tree using [SingleChildScrollView]
 class ExpandableTreeWidget<T extends AbsNodeType> extends StatefulWidget {
-  const ExpandableTreeWidget(this.tree, {super.key});
+  const ExpandableTreeWidget(
+    this.tree, {
+    super.key,
+    this.maxLines = 1,
+  });
 
   final TreeType<T> tree;
+  final int maxLines;
 
   @override
   State<ExpandableTreeWidget<T>> createState() =>
@@ -20,6 +25,7 @@ class _ExpandableTreeWidgetState<T extends AbsNodeType>
       child: _VTSNodeWidget<T>(
         widget.tree,
         onNodeDataChanged: () => setState(() {}),
+        maxLines: widget.maxLines,
       ),
     );
   }
@@ -32,9 +38,11 @@ class _VTSNodeWidget<T extends AbsNodeType> extends StatefulWidget {
     this.tree, {
     super.key,
     required this.onNodeDataChanged,
+    required this.maxLines,
   });
 
   final TreeType<T> tree;
+  final int maxLines;
 
   /// IMPORTANT: Because this library **DOESN'T** use any state management
   /// library, therefore I need to use call back function like this.
@@ -100,7 +108,7 @@ class _VTSNodeWidgetState<T extends AbsNodeType>
                         (widget.tree.isLeaf
                             ? ""
                             : " (${widget.tree.children.length})"),
-                    maxLines: 1,
+                    maxLines: widget.maxLines,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -153,6 +161,7 @@ class _VTSNodeWidgetState<T extends AbsNodeType>
         (int index) => _VTSNodeWidget(
           list[index],
           onNodeDataChanged: widget.onNodeDataChanged,
+          maxLines: widget.maxLines,
         ),
       );
 

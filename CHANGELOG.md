@@ -1,3 +1,6 @@
+## 0.0.7
+* Apply multiple-lines property for [ExpandableTreeWidget](lib/views/expandable_tree_widget.dart)
+
 ## 0.0.6+1
 * Downgrade SDK again
 

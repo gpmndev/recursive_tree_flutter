@@ -6,7 +6,7 @@ import '../models/dms4_node_type.dart';
 /// won't have any UNAVAILABLE nodes.
 TreeType<Dms4NodeType> sampleTreeDms4<T extends AbsNodeType>() {
   var root = TreeType<Dms4NodeType>(
-    data: Dms4NodeType.sampleInner("0"),
+    data: Dms4NodeType.sampleInner("0", isExpanded: true),
     children: [],
     parent: null,
   );

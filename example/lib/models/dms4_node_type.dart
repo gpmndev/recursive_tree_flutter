@@ -11,10 +11,12 @@ class Dms4NodeType extends AbsNodeType {
     bool isChosen = false,
   }) : super(id: id, title: title, isInner: isInner, isChosen: isChosen);
 
-  Dms4NodeType.sampleInner(String level) : super(id: -1, title: "") {
+  Dms4NodeType.sampleInner(String level, {bool isExpanded = false})
+      : super(id: -1, title: "") {
     super.id = Random().nextInt(100000);
     super.title = "(inner) title of level $level";
     super.isChosen = false;
+    super.isExpanded = isExpanded;
   }
 
   Dms4NodeType.sampleLeaf(String level) : super(id: -1, title: "") {

@@ -195,6 +195,7 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
         if (newAddedTreeChildren.isEmpty) {
           var snackBar =
               const SnackBar(content: Text("This one has no children"));
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           setState(() {
             tree.data.isUnavailable = true;

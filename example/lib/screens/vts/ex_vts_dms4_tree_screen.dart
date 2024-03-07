@@ -122,8 +122,9 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
   @override
   Widget buildNode() {
     if (!widget.tree.data.isShowedInSearching) return const SizedBox.shrink();
+    if (widget.tree.isRoot) return const SizedBox.shrink();
 
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         updateTreeSingleChoiceDms4(tree, !tree.data.isChosen!);
         widget.onNodeDataChanged();
