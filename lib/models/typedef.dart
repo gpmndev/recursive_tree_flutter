@@ -11,3 +11,6 @@ typedef FunctionGetTreeChildren<T extends AbsNodeType> = List<TreeType<T>>
 
 typedef FunctionBuildLeadingWidget<T extends AbsNodeType> = Widget Function(
     TreeType<T> tree, VoidCallback setStateCallback);
+
+typedef FunctionBuildLeadingWidget1<T extends AbsNodeType> = Widget Function(
+    TreeType<T> tree, VoidCallback setStateCallback);
