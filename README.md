@@ -296,7 +296,7 @@ Similarly to the directory tree structure on a computer, `recursive_tree_flutter
     - [uncheckALl(tree)](lib/functions/tree_update_functions.dart#L51): Uncheck all.
     - [updateTreeMultipleChoice(tree, chosenValue, isUpdatingParentRecursion)](lib/functions/tree_update_functions.dart#L68): Updates the multiple choice tree when a node is ticked.
     - [updateTreeSingleChoice(tree, chosenValue)](lib/functions/tree_update_functions.dart#L131): Updates the single choice tree when a leaf is ticked.
-    - [updateTreeWithSearchingTitle(tree, searchingText)](lib/functions/tree_update_functions.dart#L160): Updates the `isShowedInSearching` field of the nodes when applying the search function.
+    - [updateTreeWithSearchingTitle(tree, searchingText, willBlurParent, willAllExpanded)](lib/functions/tree_update_functions.dart#L160): Updates the `isShowedInSearching` field of the nodes when applying the search function.
 
 ### Flutter UI Tree
 

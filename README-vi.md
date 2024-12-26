@@ -297,7 +297,7 @@ Tương tự cấu trúc cây thư mục trong máy tính, `recursive_tree_flutt
     - [uncheckALl(tree)](lib/functions/tree_update_functions.dart#L51): Uncheck all.
     - [updateTreeMultipleChoice(tree, chosenValue, isUpdatingParentRecursion)](lib/functions/tree_update_functions.dart#L68): Cập nhập cây (multiple choice) khi một node nào đó được tick.
     - [updateTreeSingleChoice(tree, chosenValue)](lib/functions/tree_update_functions.dart#L131): Cập nhập cây (single choice) khi một lá nào đó được tick.
-    - [updateTreeWithSearchingTitle(tree, searchingText)](lib/functions/tree_update_functions.dart#L160): Update trường `isShowedInSearching` của các node khi áp dụng chức năng search.
+    - [updateTreeWithSearchingTitle(tree, searchingText, willBlurParent, willAllExpanded)](lib/functions/tree_update_functions.dart#L160): Update trường `isShowedInSearching` của các node khi áp dụng chức năng search.
 
 ### Cây giao diện Flutter
 
