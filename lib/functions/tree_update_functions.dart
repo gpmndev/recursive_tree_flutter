@@ -128,8 +128,7 @@ Message: Some logic error happen""");
 }
 
 /// The tree is single choice, not multiple choice. Only leaf can be chosen.
-void updateTreeSingleChoice<T extends AbsNodeType>(
-    TreeType<T> tree, bool chosenValue) {
+void updateTreeSingleChoice<T extends AbsNodeType>(TreeType<T> tree, bool chosenValue) {
   /// if `chosenValue == true`, all of its ancestors ancestors must have value
   /// `isChosen == null` (because we need to customize UI of each inner node if
   /// one of its children is chosen), others have value `false`.
@@ -157,18 +156,30 @@ void _updateAncestorsToNull<T extends AbsNodeType>(TreeType<T> tree) {
 }
 
 /// Update field `isShowedInSearching` of every node based on searching text.
-void updateTreeWithSearchingTitle<T extends AbsNodeType>(
-    TreeType<T> tree, String searchingText) {
+void updateTreeWithSearchingTitle<T extends AbsNodeType>(TreeType<T> tree, String searchingText,
+    {bool willBlurParent = false, bool willAllExpanded = false}) {
   var root = findRoot(tree);
 
   // searching text is empty -> mark all nodes displayable
   if (searchingText.isEmpty) {
     _updateFullTrueIsShowedInSearching<T>(root);
+    _updateFullBlurredValue<T>(root, false);
+    _updateFullExpanded<T>(root, false);
     return;
   }
 
   //? Step 1: Mark entire tree to non-displayable
   _updateFullFalseIsShowedInSearching<T>(root);
+
+  //? Optional: Blur all nodes
+  if (willBlurParent) {
+    _updateFullBlurredValue<T>(root, true);
+  }
+
+  //? Optional: Expand all nodes when perform search
+  if (willAllExpanded) {
+    _updateFullExpanded<T>(root, true);
+  }
 
   //? Step 2: Find all nodes that contains searching text
   List<TreeType<T>> foundNodes = [];
@@ -176,13 +187,13 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(
 
   //? Step 3: Update all branches from founded nodes to root as displayable
   for (var node in foundNodes) {
+    node.data.isBlurred = false;
     _updateAncestorsToDisplayable<T>(node);
   }
 }
 
 /// Update field [isShowedInSearching] of ALL nodes to [true]
-void _updateFullTrueIsShowedInSearching<T extends AbsNodeType>(
-    TreeType<T> tree) {
+void _updateFullTrueIsShowedInSearching<T extends AbsNodeType>(TreeType<T> tree) {
   tree.data.isShowedInSearching = true;
   for (var child in tree.children) {
     _updateFullTrueIsShowedInSearching(child);
@@ -190,11 +201,26 @@ void _updateFullTrueIsShowedInSearching<T extends AbsNodeType>(
 }
 
 /// Update field [isShowedInSearching] of ALL nodes to [false]
-void _updateFullFalseIsShowedInSearching<T extends AbsNodeType>(
-    TreeType<T> tree) {
+void _updateFullFalseIsShowedInSearching<T extends AbsNodeType>(TreeType<T> tree) {
   tree.data.isShowedInSearching = false;
   for (var child in tree.children) {
     _updateFullFalseIsShowedInSearching(child);
+  }
+}
+
+/// Update field [isBlurred] of ALL nodes to [value]
+void _updateFullBlurredValue<T extends AbsNodeType>(TreeType<T> tree, bool value) {
+  tree.data.isBlurred = value;
+  for (var child in tree.children) {
+    _updateFullBlurredValue(child, value);
+  }
+}
+
+/// Update field [isExpanded] of ALL nodes to [value]
+void _updateFullExpanded<T extends AbsNodeType>(TreeType<T> tree, bool value) {
+  tree.data.isExpanded = value;
+  for (var child in tree.children) {
+    _updateFullExpanded(child, value);
   }
 }
 
@@ -210,8 +236,7 @@ void _updateAncestorsToDisplayable<T extends AbsNodeType>(TreeType<T> tree) {
 
 /// The tree is single choice, not multiple choice. Viettel DMS.4 customized
 /// version: Every node can be chosen, so [T.isChosen] is never null.
-void updateTreeSingleChoiceDms4<T extends AbsNodeType>(
-    TreeType<T> tree, bool chosenValue) {
+void updateTreeSingleChoiceDms4<T extends AbsNodeType>(TreeType<T> tree, bool chosenValue) {
   // uncheck all - every node will have isChosen = false
   var root = findRoot(tree);
   uncheckALl(root);

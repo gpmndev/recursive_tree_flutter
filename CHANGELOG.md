@@ -1,3 +1,9 @@
+## 1.0.2
+* Add blur effect & auto expand matching children when perform search 
+
+## 1.0.1
+* Change something
+
 ## 0.0.8
 * Add node leading padding argument
 
