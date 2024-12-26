@@ -128,8 +128,7 @@ Message: Some logic error happen""");
 }
 
 /// The tree is single choice, not multiple choice. Only leaf can be chosen.
-void updateTreeSingleChoice<T extends AbsNodeType>(
-    TreeType<T> tree, bool chosenValue) {
+void updateTreeSingleChoice<T extends AbsNodeType>(TreeType<T> tree, bool chosenValue) {
   /// if `chosenValue == true`, all of its ancestors ancestors must have value
   /// `isChosen == null` (because we need to customize UI of each inner node if
   /// one of its children is chosen), others have value `false`.
@@ -157,16 +156,14 @@ void _updateAncestorsToNull<T extends AbsNodeType>(TreeType<T> tree) {
 }
 
 /// Update field `isShowedInSearching` of every node based on searching text.
-void updateTreeWithSearchingTitle<T extends AbsNodeType>(
-  TreeType<T> tree, 
-  String searchingText, 
-  {bool willBlurParent = false, bool willAllExpanded = false}
-) {
+void updateTreeWithSearchingTitle<T extends AbsNodeType>(TreeType<T> tree, String searchingText,
+    {bool willBlurParent = false, bool willAllExpanded = false}) {
   var root = findRoot(tree);
 
   // searching text is empty -> mark all nodes displayable
   if (searchingText.isEmpty) {
     _updateFullTrueIsShowedInSearching<T>(root);
+    _updateFullTrueBlurred<T>(root);
     return;
   }
 
@@ -175,7 +172,7 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(
 
   //? Optional: Blur all nodes
   if (willBlurParent) {
-    _updateFullFalseBlurred<T>(root);
+    _updateFullTrueBlurred<T>(root);
   }
 
   //? Optional: Expand all nodes when perform search
@@ -189,18 +186,18 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(
 
   //? Step 3: Update all branches from founded nodes to root as displayable
   for (var node in foundNodes) {
+    node.data.isBlurred = false;
     _updateAncestorsToDisplayable<T>(node);
 
     // Blur the ancestors of those foundNodes
-    if (willBlurParent) {
-      _updateBlurAncestors<T>(node);
-    }
+    // if (willBlurParent) {
+    //   _updateBlurAncestors<T>(node);
+    // }
   }
 }
 
 /// Update field [isShowedInSearching] of ALL nodes to [true]
-void _updateFullTrueIsShowedInSearching<T extends AbsNodeType>(
-    TreeType<T> tree) {
+void _updateFullTrueIsShowedInSearching<T extends AbsNodeType>(TreeType<T> tree) {
   tree.data.isShowedInSearching = true;
   for (var child in tree.children) {
     _updateFullTrueIsShowedInSearching(child);
@@ -208,19 +205,18 @@ void _updateFullTrueIsShowedInSearching<T extends AbsNodeType>(
 }
 
 /// Update field [isShowedInSearching] of ALL nodes to [false]
-void _updateFullFalseIsShowedInSearching<T extends AbsNodeType>(
-    TreeType<T> tree) {
+void _updateFullFalseIsShowedInSearching<T extends AbsNodeType>(TreeType<T> tree) {
   tree.data.isShowedInSearching = false;
   for (var child in tree.children) {
     _updateFullFalseIsShowedInSearching(child);
   }
 }
 
-/// Update field [isBlurred] of ALL nodes to [false]
-void _updateFullFalseBlurred<T extends AbsNodeType>(TreeType<T> tree) {
-  tree.data.isBlurred = false;
+/// Update field [isBlurred] of ALL nodes to [true]
+void _updateFullTrueBlurred<T extends AbsNodeType>(TreeType<T> tree) {
+  tree.data.isBlurred = true;
   for (var child in tree.children) {
-    _updateFullFalseBlurred(child);
+    _updateFullTrueBlurred(child);
   }
 }
 
@@ -246,15 +242,18 @@ void _updateBlurAncestors<T extends AbsNodeType>(TreeType<T> tree) {
   if (tree.data.isBlurred) return;
 
   var parent = tree.parent;
-  if (parent == null) return;
+  if (parent == null || parent.data.id == tree.data.id) {
+    tree.data.isBlurred = true;
+    return;
+  }
+
   _updateBlurAncestors(parent);
   parent.data.isBlurred = true;
 }
 
 /// The tree is single choice, not multiple choice. Viettel DMS.4 customized
 /// version: Every node can be chosen, so [T.isChosen] is never null.
-void updateTreeSingleChoiceDms4<T extends AbsNodeType>(
-    TreeType<T> tree, bool chosenValue) {
+void updateTreeSingleChoiceDms4<T extends AbsNodeType>(TreeType<T> tree, bool chosenValue) {
   // uncheck all - every node will have isChosen = false
   var root = findRoot(tree);
   uncheckALl(root);
