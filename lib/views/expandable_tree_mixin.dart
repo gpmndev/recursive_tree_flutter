@@ -3,6 +3,7 @@
  * Email: nvbien2000@gmail.com
  */
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
 
@@ -45,11 +46,11 @@ mixin ExpandableTreeMixin<T extends AbsNodeType> {
 
   Widget buildNode();
 
-  Widget buildChildrenNodes() {
+  Widget buildChildrenNodes({final EdgeInsets? padding = const EdgeInsets.only(left: 24)}) {
     return SizeTransition(
       sizeFactor: rotationController,
       child: Padding(
-        padding: const EdgeInsets.only(left: 24),
+        padding: padding ?? EdgeInsets.zero,
         child: Column(children: generateChildrenNodesWidget(tree.children)),
       ),
     );

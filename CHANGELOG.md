@@ -4,6 +4,9 @@
 ## 1.0.1
 * Change something
 
+## 0.0.8
+* Add node leading padding argument
+
 ## 0.0.7
 * Apply multiple-lines property for [ExpandableTreeWidget](lib/views/expandable_tree_widget.dart)
 
