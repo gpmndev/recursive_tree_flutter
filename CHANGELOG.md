@@ -1,3 +1,6 @@
+## 1.0.2
+* Add blur effect & auto expand matching children when perform search 
+
 ## 1.0.1
 * Change something
 

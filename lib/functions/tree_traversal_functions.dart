@@ -20,9 +20,7 @@ EChosenAllValues isChosenAll<T extends AbsNodeType>(TreeType<T> tree,
     if (tree.data.isUnavailable) {
       return EChosenAllValues.notChosenable;
     } else {
-      return tree.data.isChosen == true
-          ? EChosenAllValues.chosenAll
-          : EChosenAllValues.unchosenAll;
+      return tree.data.isChosen == true ? EChosenAllValues.chosenAll : EChosenAllValues.unchosenAll;
     }
   }
 
@@ -95,8 +93,7 @@ TreeType<T> findRoot<T extends AbsNodeType>(TreeType<T> tree) {
   return findRoot(tree.parent!);
 }
 
-TreeType<T>? findTreeWithId<T extends AbsNodeType>(
-    TreeType<T> tree, dynamic id) {
+TreeType<T>? findTreeWithId<T extends AbsNodeType>(TreeType<T> tree, dynamic id) {
   if (tree.data.id == id) {
     return tree;
   } else {
@@ -114,7 +111,7 @@ void searchAllTreesWithTitleDFS<T extends AbsNodeType>(
     TreeType<T> tree, String text, List<TreeType<T>> result) {
   if (tree.data.isUnavailable) return;
 
-  if (tree.data.title.contains(text)) result.add(tree);
+  if (tree.data.title.toLowerCase().contains(text.toLowerCase())) result.add(tree);
 
   for (var child in tree.children) {
     searchAllTreesWithTitleDFS(child, text, result);
@@ -136,8 +133,7 @@ void searchLeavesWithTitleDFS<T extends AbsNodeType>(
   }
 }
 
-void returnChosenLeaves<T extends AbsNodeType>(
-    TreeType<T> tree, List<TreeType<T>> result) {
+void returnChosenLeaves<T extends AbsNodeType>(TreeType<T> tree, List<TreeType<T>> result) {
   if (tree.data.isUnavailable) return;
 
   if (tree.isLeaf && tree.data.isChosen == true) {
@@ -150,8 +146,7 @@ void returnChosenLeaves<T extends AbsNodeType>(
   }
 }
 
-void returnChosenNodes<T extends AbsNodeType>(
-    TreeType<T> tree, List<TreeType<T>> result) {
+void returnChosenNodes<T extends AbsNodeType>(TreeType<T> tree, List<TreeType<T>> result) {
   if (tree.data.isUnavailable) return;
 
   if (tree.data.isChosen == true) result.add(tree);
@@ -161,8 +156,7 @@ void returnChosenNodes<T extends AbsNodeType>(
   }
 }
 
-void returnFavoriteNodes<T extends AbsNodeType>(
-    TreeType<T> tree, List<TreeType<T>> result) {
+void returnFavoriteNodes<T extends AbsNodeType>(TreeType<T> tree, List<TreeType<T>> result) {
   if (tree.data.isUnavailable) return;
 
   if (tree.data.isFavorite == true) result.add(tree);
