@@ -54,7 +54,12 @@ class _ExTreeSingleChoiceState extends State<ExTreeSingleChoice> {
                   hintText: "PRESS ENTER TO UPDATE",
                 ),
                 onFieldSubmitted: (value) {
-                  updateTreeWithSearchingTitle(_tree, value, willAllExpanded: true, willBlurParent: true,);
+                  updateTreeWithSearchingTitle(
+                    _tree,
+                    value,
+                    willAllExpanded: true,
+                    willBlurParent: true,
+                  );
                   setState(() {});
                 },
               ),
@@ -117,6 +122,8 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
     super.didUpdateWidget(oldWidget);
     if (tree.data.isExpanded) {
       rotationController.forward();
+    } else {
+      rotationController.reverse();
     }
   }
 

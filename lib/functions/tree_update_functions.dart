@@ -164,6 +164,7 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(TreeType<T> tree, Strin
   if (searchingText.isEmpty) {
     _updateFullTrueIsShowedInSearching<T>(root);
     _updateFullBlurredValue<T>(root, false);
+    _updateFullExpanded<T>(root, false);
     return;
   }
 
@@ -177,7 +178,7 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(TreeType<T> tree, Strin
 
   //? Optional: Expand all nodes when perform search
   if (willAllExpanded) {
-    _updateFullTrueExpanded<T>(root);
+    _updateFullExpanded<T>(root, true);
   }
 
   //? Step 2: Find all nodes that contains searching text
@@ -188,11 +189,6 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(TreeType<T> tree, Strin
   for (var node in foundNodes) {
     node.data.isBlurred = false;
     _updateAncestorsToDisplayable<T>(node);
-
-    // Blur the ancestors of those foundNodes
-    // if (willBlurParent) {
-    //   _updateBlurAncestors<T>(node);
-    // }
   }
 }
 
@@ -220,11 +216,11 @@ void _updateFullBlurredValue<T extends AbsNodeType>(TreeType<T> tree, bool value
   }
 }
 
-/// Update field [isExpanded] of ALL nodes to [true]
-void _updateFullTrueExpanded<T extends AbsNodeType>(TreeType<T> tree) {
-  tree.data.isExpanded = true;
+/// Update field [isExpanded] of ALL nodes to [value]
+void _updateFullExpanded<T extends AbsNodeType>(TreeType<T> tree, bool value) {
+  tree.data.isExpanded = value;
   for (var child in tree.children) {
-    _updateFullTrueExpanded(child);
+    _updateFullExpanded(child, value);
   }
 }
 
@@ -236,19 +232,6 @@ void _updateAncestorsToDisplayable<T extends AbsNodeType>(TreeType<T> tree) {
   tree.data.isShowedInSearching = true;
   if (tree.parent == null) return;
   _updateAncestorsToDisplayable(tree.parent!);
-}
-
-void _updateBlurAncestors<T extends AbsNodeType>(TreeType<T> tree) {
-  if (tree.data.isBlurred) return;
-
-  var parent = tree.parent;
-  if (parent == null || parent.data.id == tree.data.id) {
-    tree.data.isBlurred = true;
-    return;
-  }
-
-  _updateBlurAncestors(parent);
-  parent.data.isBlurred = true;
 }
 
 /// The tree is single choice, not multiple choice. Viettel DMS.4 customized
