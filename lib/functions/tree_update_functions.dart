@@ -163,7 +163,7 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(TreeType<T> tree, Strin
   // searching text is empty -> mark all nodes displayable
   if (searchingText.isEmpty) {
     _updateFullTrueIsShowedInSearching<T>(root);
-    _updateFullBlurredValue<T>(root, true);
+    _updateFullBlurredValue<T>(root, false);
     return;
   }
 
@@ -172,7 +172,7 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(TreeType<T> tree, Strin
 
   //? Optional: Blur all nodes
   if (willBlurParent) {
-    _updateFullBlurredValue<T>(root, false);
+    _updateFullBlurredValue<T>(root, true);
   }
 
   //? Optional: Expand all nodes when perform search
