@@ -54,7 +54,7 @@ class _ExTreeSingleChoiceState extends State<ExTreeSingleChoice> {
                   hintText: "PRESS ENTER TO UPDATE",
                 ),
                 onFieldSubmitted: (value) {
-                  updateTreeWithSearchingTitle(_tree, value);
+                  updateTreeWithSearchingTitle(_tree, value, willAllExpanded: true, willBlurParent: true,);
                   setState(() {});
                 },
               ),
@@ -113,6 +113,14 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
   }
 
   @override
+  void didUpdateWidget(covariant _VTSNodeWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (tree.data.isExpanded) {
+      rotationController.forward();
+    }
+  }
+
+  @override
   void dispose() {
     super.disposeRotationController();
     super.dispose();
@@ -159,6 +167,9 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
         tree.data.title + (tree.isLeaf ? "" : " (${tree.children.length})"),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: tree.data.isBlurred ? Colors.grey : Colors.black,
+            ),
       ),
     );
   }
@@ -184,9 +195,7 @@ class _VTSNodeWidgetState<T extends AbsNodeType> extends State<_VTSNodeWidget>
   //* __________________________________________________________________________
 
   @override
-  List<Widget> generateChildrenNodesWidget(
-          List<TreeType<CustomNodeType>> list) =>
-      List.generate(
+  List<Widget> generateChildrenNodesWidget(List<TreeType<CustomNodeType>> list) => List.generate(
         list.length,
         (int index) => _VTSNodeWidget(
           list[index],

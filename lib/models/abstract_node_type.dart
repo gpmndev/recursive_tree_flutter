@@ -37,6 +37,11 @@ abstract class AbsNodeType {
   /// We can call this is `isDisplayable`.
   bool isShowedInSearching;
 
+  /// An effect that similar to disabled but the node can be choosen
+  /// In case to blur the node that not matched the text and highlight the matched
+  /// Default value is false
+  bool isBlurred;
+
   AbsNodeType({
     required this.id,
     required this.title,
@@ -46,6 +51,7 @@ abstract class AbsNodeType {
     this.isExpanded = false,
     this.isFavorite = false,
     this.isShowedInSearching = true,
+    this.isBlurred = false,
   }) {
     if (!isInner && isChosen == null) {
       throw ArgumentError("Leaf node's `isChosen` cannot contain null value.");
@@ -56,5 +62,5 @@ abstract class AbsNodeType {
 
   @override
   String toString() =>
-      "AbsNodeType{title: $title, isInner: $isInner, isUnavailable: $isUnavailable, isChosen: $isChosen, isExpanded: $isExpanded}";
+      "AbsNodeType{title: $title, isInner: $isInner, isUnavailable: $isUnavailable, isChosen: $isChosen, isExpanded: $isExpanded}, isBlurred: $isBlurred";
 }

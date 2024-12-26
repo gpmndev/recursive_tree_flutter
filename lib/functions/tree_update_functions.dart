@@ -158,7 +158,10 @@ void _updateAncestorsToNull<T extends AbsNodeType>(TreeType<T> tree) {
 
 /// Update field `isShowedInSearching` of every node based on searching text.
 void updateTreeWithSearchingTitle<T extends AbsNodeType>(
-    TreeType<T> tree, String searchingText) {
+  TreeType<T> tree, 
+  String searchingText, 
+  {bool willBlurParent = false, bool willAllExpanded = false}
+) {
   var root = findRoot(tree);
 
   // searching text is empty -> mark all nodes displayable
@@ -170,6 +173,16 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(
   //? Step 1: Mark entire tree to non-displayable
   _updateFullFalseIsShowedInSearching<T>(root);
 
+  //? Optional: Blur all nodes
+  if (willBlurParent) {
+    _updateFullFalseBlurred<T>(root);
+  }
+
+  //? Optional: Expand all nodes when perform search
+  if (willAllExpanded) {
+    _updateFullTrueExpanded<T>(root);
+  }
+
   //? Step 2: Find all nodes that contains searching text
   List<TreeType<T>> foundNodes = [];
   searchAllTreesWithTitleDFS<T>(root, searchingText, foundNodes);
@@ -177,6 +190,11 @@ void updateTreeWithSearchingTitle<T extends AbsNodeType>(
   //? Step 3: Update all branches from founded nodes to root as displayable
   for (var node in foundNodes) {
     _updateAncestorsToDisplayable<T>(node);
+
+    // Blur the ancestors of those foundNodes
+    if (willBlurParent) {
+      _updateBlurAncestors<T>(node);
+    }
   }
 }
 
@@ -198,6 +216,22 @@ void _updateFullFalseIsShowedInSearching<T extends AbsNodeType>(
   }
 }
 
+/// Update field [isBlurred] of ALL nodes to [false]
+void _updateFullFalseBlurred<T extends AbsNodeType>(TreeType<T> tree) {
+  tree.data.isBlurred = false;
+  for (var child in tree.children) {
+    _updateFullFalseBlurred(child);
+  }
+}
+
+/// Update field [isExpanded] of ALL nodes to [true]
+void _updateFullTrueExpanded<T extends AbsNodeType>(TreeType<T> tree) {
+  tree.data.isExpanded = true;
+  for (var child in tree.children) {
+    _updateFullTrueExpanded(child);
+  }
+}
+
 void _updateAncestorsToDisplayable<T extends AbsNodeType>(TreeType<T> tree) {
   /// `isShowedInSearching` already is true means this branch has been updated
   /// before (see used in [updateTreeWithSearchingTitle()])
@@ -206,6 +240,15 @@ void _updateAncestorsToDisplayable<T extends AbsNodeType>(TreeType<T> tree) {
   tree.data.isShowedInSearching = true;
   if (tree.parent == null) return;
   _updateAncestorsToDisplayable(tree.parent!);
+}
+
+void _updateBlurAncestors<T extends AbsNodeType>(TreeType<T> tree) {
+  if (tree.data.isBlurred) return;
+
+  var parent = tree.parent;
+  if (parent == null) return;
+  _updateBlurAncestors(parent);
+  parent.data.isBlurred = true;
 }
 
 /// The tree is single choice, not multiple choice. Viettel DMS.4 customized
