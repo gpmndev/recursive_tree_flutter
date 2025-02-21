@@ -1,3 +1,6 @@
+## 1.0.4
+* Add non-diacritic search
+
 ## 1.0.3
 * Add node leading padding
 
