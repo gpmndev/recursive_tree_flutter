@@ -4,6 +4,7 @@
  */
 
 import 'package:recursive_tree_flutter/recursive_tree_flutter.dart';
+import 'package:recursive_tree_flutter/utils/string_ext.dart';
 
 /// This enum support functions [isChosenAll]
 enum EChosenAllValues { chosenAll, unchosenAll, chosenSome, notChosenable }
@@ -111,7 +112,11 @@ void searchAllTreesWithTitleDFS<T extends AbsNodeType>(
     TreeType<T> tree, String text, List<TreeType<T>> result) {
   if (tree.data.isUnavailable) return;
 
-  if (tree.data.title.toLowerCase().contains(text.toLowerCase())) result.add(tree);
+  final searchText = text.toLowerCase();
+  final originTitle = tree.data.title.toLowerCase();
+  if (originTitle.contains(searchText) || originTitle.toNoneDiacritics.contains(searchText)) {
+    result.add(tree);
+  }
 
   for (var child in tree.children) {
     searchAllTreesWithTitleDFS(child, text, result);
